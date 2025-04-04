@@ -82,8 +82,8 @@ const Footer = (props: Props) => {
             </section>
 
 
-            {/* footer */}
-            <section className='text-black px-[60px]  w-full md:hidden bg-white'>
+            {/*mobile footer */}
+            <section className='text-black px-[10px] sm:px-[60px]  w-full md:hidden bg-white'>
                 <div className=' w-full grid gap-y-10 sm:grid-cols-3'>
                     
                     <div className='sm:col-span-3 col-span-2 gap-[16px] flex flex-col'>

@@ -1,31 +1,16 @@
+import Car from '@/types/CarType'
 import Image from 'next/image'
 import React from 'react'
 import { GiGearStickPattern } from 'react-icons/gi'
 import { PiSeatbeltDuotone } from 'react-icons/pi'
 
-type Props = {}
-type Car = {
-    model: string,
-    price: number,
-    category: string,
-    manufactorer: string,
-    color: string,
-    transmissionType: string,
-    numberOfSeats: number,
+type Props = {
+    car: Car
 }
-const CarCard = (props: Props) => {
-    const car: Car = {
-        model: 'Camry',
-        price: 99.00,
-        category: 'SEDAN',
-        manufactorer: 'Toyota',
-        color: 'Silver',
-        transmissionType: 'Automatic',
-        numberOfSeats: 5,
-    };
 
+const CarCard = ({car}: Props) => {
     return (
-        <div className='rounded-lg relative flex flex-col justify-between p-5 w-[300px] bg-amber-200 h-[380px]'>
+        <div className='rounded-lg relative flex flex-col justify-between p-5 w-full  h-[380px] bg-white'>
             <div className='flex flex-col text-black gap-1 w-full'>
                 <span className='font-bold text-[20px]'>{car.model}</span>
                 <span className=' font-bold text-[#90A3BF] text-[14px]'>{car.category}</span>

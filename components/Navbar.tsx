@@ -7,7 +7,7 @@ const Navbar = (props: Props) => {
     const user: boolean = true;
 
     return (
-        <div className="navbar px-[60px] bg-white">
+        <div className="navbar px-[10px] sm:px-[60px] bg-white">
             <div className="flex-1 text-primary font-bold text-[32px]">
                 <Link href={"/"}>CARENT</Link>
             </div>

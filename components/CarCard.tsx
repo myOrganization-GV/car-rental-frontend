@@ -1,5 +1,7 @@
 import Image from 'next/image'
 import React from 'react'
+import { GiGearStickPattern } from 'react-icons/gi'
+import { PiSeatbeltDuotone } from 'react-icons/pi'
 
 type Props = {}
 type Car = {
@@ -37,8 +39,12 @@ const CarCard = (props: Props) => {
             ></Image>
             <div className='flex flex-col items-center gap-3 text-[#90A3BF] w-full'>
                 <div className=' flex justify-around text-[#90A3BF] w-full'>
-                    <span>{car.transmissionType}</span>
-                    <span>{car.numberOfSeats} people</span>
+                    <span className="flex items-center">
+                        <GiGearStickPattern className="mr-1" /> {car.transmissionType}
+                    </span>
+                    <span className="flex items-center">
+                        <PiSeatbeltDuotone className="mr-1" /> {car.numberOfSeats} seats
+                    </span>
                 </div>
                 <div className='flex w-full justify-between items-center'>
                     <span className='font-semibold text-2xl text-black'>${car.price.toFixed(2)}/<span className='font-normal text-xl text-[#90A3BF]'>day</span> </span>

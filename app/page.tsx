@@ -1,3 +1,4 @@
+import CarCard from "@/components/CarCard";
 import Image from "next/image";
 
 export default function Home() {
@@ -6,9 +7,7 @@ export default function Home() {
       <div>
         abf
       </div>
-      <div>
-        abafasd
-      </div>
+      <CarCard/>
     </div>
   );
 }

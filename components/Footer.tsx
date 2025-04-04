@@ -6,7 +6,7 @@ const Footer = (props: Props) => {
     return (
         <>
             {/* desktop footer */}
-            <section className='hidden pt-[60px] pb-[16px] md:flex flex-wrap w-full text-black bg-white'>
+            <section className='hidden px-[60px] pt-[60px] pb-[16px] md:flex flex-wrap w-full text-black bg-white'>
                 <div className=' w-1/3 lg:w-1/2 h-2/3'>
                     <div className='w-[300px] gap-[16px] flex flex-col  h-[110px]'>
                         <span className='font-bold text-[32px] text-primary '>CARENT</span>
@@ -83,7 +83,7 @@ const Footer = (props: Props) => {
 
 
             {/* footer */}
-            <section className='text-black w-full md:hidden bg-white'>
+            <section className='text-black px-[60px]  w-full md:hidden bg-white'>
                 <div className=' w-full grid gap-y-10 sm:grid-cols-3'>
                     
                     <div className='sm:col-span-3 col-span-2 gap-[16px] flex flex-col'>

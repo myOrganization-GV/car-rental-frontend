@@ -4,7 +4,7 @@ import React from 'react'
 type Props = {}
 
 const Navbar = (props: Props) => {
-    const user: boolean = true;
+    const user: boolean = false;
 
     return (
         <div className="navbar px-[10px] sm:px-[60px] bg-white">

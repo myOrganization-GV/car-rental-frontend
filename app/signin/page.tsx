@@ -1,3 +1,4 @@
+import SigninForm from '@/components/SigninForm'
 import React from 'react'
 
 type Props = {}
@@ -5,8 +6,9 @@ type Props = {}
 const page = (props: Props) => {
 
   return (
-    <div>sign in page</div>
-
+    <div className='bg-[#F6F7F9] py-[20px]'>
+        <SigninForm/>
+    </div>
   )
 }
 

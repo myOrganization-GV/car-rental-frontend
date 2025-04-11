@@ -7,8 +7,8 @@ const GithubSvg = () => {
     <svg className="h-6 w-6 mr-2" xmlns="http://www.w3.org/2000/svg" 
     viewBox="0 0 73 73" version="1.1">
     <g id="team-collaboration/version-control/github" stroke="none" strokeWidth="1" fill="none"
-        fill-rule="evenodd">
-        <g id="container" transform="translate(2.000000, 2.000000)" fill-rule="nonzero">
+        fillRule="evenodd">
+        <g id="container" transform="translate(2.000000, 2.000000)" fillRule="nonzero">
             <rect id="mask" stroke="#000000" strokeWidth="2" fill="#000000" x="-1"
                 y="-1" width="71" height="71" rx="14">
 

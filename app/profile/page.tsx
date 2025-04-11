@@ -1,9 +1,8 @@
 import { auth } from "@/auth";
 
 const MyProfile = async () => {
-
   const session = await auth();
-  console.log("[Profile Page] Session Object:", session);
+
 
   const backendResponse = await fetch("http://localhost:8080/user/", {
     method: "GET",
@@ -15,7 +14,6 @@ const MyProfile = async () => {
 
 
   const responseText = await backendResponse.text();
-  console.log("[Profile Page] Backend Response:", responseText);
 
   const user = session?.user;
 

@@ -5,12 +5,12 @@ import { isRedirectError } from "next/dist/client/components/redirect-error";
 
 
 
-export const signInFormAction = async (previousState: unknown, formData: FormData) => {
+export const signinFormAction = async (previousState: unknown, formData: FormData) => {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
     try{
-        const login = await signIn("credentials", {
+        await signIn("credentials", {
         email,
         password,
         redirectTo: "/"

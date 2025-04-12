@@ -3,13 +3,13 @@
 import React, { useActionState, useEffect } from 'react'
 import GoogleSvg from './GoogleSvg'
 import GithubSvg from './GithubSvg'
-import { signInFormAction } from '@/lib/actions/signinFormAction'
+import { signinFormAction } from '@/lib/actions/signinFormAction'
 
 
 type Props = {}
 
 const SigninForm = (props: Props) => {
-    const[state, action, isPending]= useActionState(signInFormAction, undefined);
+    const [state, action, isPending] = useActionState(signinFormAction, undefined);
 
     return (
         <form action={action} className='w-1/3 mx-auto bg-white h-full p-4 rounded-lg'>
@@ -46,7 +46,7 @@ const SigninForm = (props: Props) => {
                         disabled={isPending}
                         className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md font-semibold transition-colors"
                     >
-                        {isPending ? "loading..." : "Sign In"}
+                        {isPending ? <span className="loading loading-spinner text-primary"></span> : "Sign In"}
                     </button>
                 </div>
                 <hr className=' col-span-2' />

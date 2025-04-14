@@ -46,7 +46,7 @@ const SigninForm = (props: Props) => {
                         disabled={isPending}
                         className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md font-semibold transition-colors"
                     >
-                        {isPending ? <span className="loading loading-spinner text-primary"></span> : "Sign In"}
+                        {isPending ? <span className="loading loading-spinner"></span> : "Sign In"}
                     </button>
                 </div>
                 <hr className=' col-span-2' />

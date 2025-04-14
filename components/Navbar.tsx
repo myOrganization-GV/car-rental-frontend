@@ -1,10 +1,13 @@
+import { auth } from '@/auth'
 import Link from 'next/link'
 import React from 'react'
+import { SignOutButton } from './SignOutButton'
 
 type Props = {}
 
-const Navbar = (props: Props) => {
-    const user: boolean = false;
+const Navbar = async (props: Props) => {
+    const session = await auth()
+    const user = session?.user;
 
     return (
         <div className="navbar px-[10px] sm:px-[60px] bg-white">
@@ -24,13 +27,15 @@ const Navbar = (props: Props) => {
                         <ul
                             tabIndex={0}
                             className="menu text-black menu-sm dropdown-content bg-white border-black border rounded-box z-1 mt-3 w-52 p-2 shadow">
-                            <li>
-                                <a className="justify-between">
+                            <li className='hover:bg-primary'>
+                                <Link href='/profile' className="justify-between ">
                                     Profile
-                                </a>
+                                </Link>
                             </li>
-                            <li><a>Settings</a></li>
-                            <li><a>Logout</a></li>
+                            <li className='hover:bg-primary'><Link href=''>Settings</Link></li>
+                            <li className='hover:bg-primary'>
+                                <SignOutButton />
+                            </li>
                         </ul>
                     </div>
                 ) : (

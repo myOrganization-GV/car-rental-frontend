@@ -1,66 +1,11 @@
 import Ads from "@/components/Ads";
 import CarCard from "@/components/CarCard";
 import CarGrid from "@/components/CarGrid";
-import Car from "@/types/CarType";
+import Car, { cars } from "@/types/CarType";
 import Image from "next/image";
 
 export default function Home() {
-  const cars: Car[] = [
-    {
-      model: 'Accord',
-      price: 95.00,
-      category: 'SEDAN',
-      manufactorer: 'Honda',
-      color: 'Gray',
-      transmissionType: 'Automatic',
-      numberOfSeats: 5,
-    },
-    {
-      model: 'Altima',
-      price: 92.00,
-      category: 'SEDAN',
-      manufactorer: 'Nissan',
-      color: 'Silver',
-      transmissionType: 'Automatic',
-      numberOfSeats: 5,
-    },
-    {
-      model: 'Sonata',
-      price: 90.00,
-      category: 'SEDAN',
-      manufactorer: 'Hyundai',
-      color: 'White',
-      transmissionType: 'Automatic',
-      numberOfSeats: 5,
-    },
-    {
-      model: 'K5',
-      price: 100.00,
-      category: 'SEDAN',
-      manufactorer: 'Kia',
-      color: 'Black',
-      transmissionType: 'Automatic',
-      numberOfSeats: 5,
-    },
-    {
-      model: 'Mazda6',
-      price: 98.00,
-      category: 'SEDAN',
-      manufactorer: 'Mazda',
-      color: 'Red',
-      transmissionType: 'Automatic',
-      numberOfSeats: 5,
-    },
-    {
-      model: 'Malibu',
-      price: 97.00,
-      category: 'SEDAN',
-      manufactorer: 'Chevrolet',
-      color: 'Blue',
-      transmissionType: 'Automatic',
-      numberOfSeats: 5,
-    },
-  ];
+
   return (
     <div className="flex flex-col">
       <div className="grid bg-[#F6F7F9] p-[10px]  sm:p-[60px] grid-cols-1 md:grid-cols-2 gap-10 ">
@@ -80,3 +25,5 @@ export default function Home() {
     </div>
   );
 }
+
+

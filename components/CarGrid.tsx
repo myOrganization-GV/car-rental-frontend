@@ -1,6 +1,6 @@
-import Car from '@/types/CarType'
 import React from 'react'
 import CarCard from './CarCard'
+import { Car } from '@/types/CarType'
 
 type Props = {
     cars: Car[]

@@ -1,13 +1,16 @@
-type Car = {
-    model: string,
-    price: number,
-    category: string,
-    manufactorer: string,
-    color: string,
-    transmissionType: string,
-    numberOfSeats: number,
-}
-
+export type Car = {
+    model: string
+    price: number
+    category: string
+    manufactorer: string
+    color: string
+    transmissionType: string
+    numberOfSeats: number
+    description: string
+    colors?: string[]
+    availableColors?: string[]
+  }
+  
 export const cars: Car[] = [
     {
       model: 'Accord',
@@ -17,6 +20,7 @@ export const cars: Car[] = [
       color: 'Gray',
       transmissionType: 'Automatic',
       numberOfSeats: 5,
+      description: 'The Honda Accord is a reliable midsize sedan known for its comfortable ride and excellent fuel efficiency.',
     },
     {
       model: 'Altima',
@@ -26,6 +30,7 @@ export const cars: Car[] = [
       color: 'Silver',
       transmissionType: 'Automatic',
       numberOfSeats: 5,
+      description: 'The Nissan Altima offers a smooth driving experience with a spacious interior and modern tech features.',
     },
     {
       model: 'Sonata',
@@ -35,6 +40,7 @@ export const cars: Car[] = [
       color: 'White',
       transmissionType: 'Automatic',
       numberOfSeats: 5,
+      description: 'The Hyundai Sonata combines sleek styling with a comfortable cabin and advanced safety systems.',
     },
     {
       model: 'K5',
@@ -44,6 +50,7 @@ export const cars: Car[] = [
       color: 'Black',
       transmissionType: 'Automatic',
       numberOfSeats: 5,
+      description: 'The Kia K5 is a sporty sedan with sharp handling, a refined interior, and plenty of standard equipment.',
     },
     {
       model: 'Mazda6',
@@ -53,6 +60,7 @@ export const cars: Car[] = [
       color: 'Red',
       transmissionType: 'Automatic',
       numberOfSeats: 5,
+      description: 'The Mazda6 is celebrated for its engaging driving dynamics, upscale cabin, and elegant design.',
     },
     {
       model: 'Malibu',
@@ -62,6 +70,7 @@ export const cars: Car[] = [
       color: 'Blue',
       transmissionType: 'Automatic',
       numberOfSeats: 5,
+      description: 'The Chevrolet Malibu offers a balanced ride, user‑friendly infotainment, and a roomy interior.',
     },
     {
       model: 'Model 3',
@@ -71,6 +80,7 @@ export const cars: Car[] = [
       color: 'White',
       transmissionType: 'Automatic',
       numberOfSeats: 5,
+      description: 'Tesla Model 3 is an all‑electric sedan delivering brisk acceleration, long range, and cutting‑edge tech.',
     },
     {
       model: '3 Series',
@@ -80,6 +90,7 @@ export const cars: Car[] = [
       color: 'Black',
       transmissionType: 'Automatic',
       numberOfSeats: 5,
+      description: 'The BMW 3 Series is a compact executive sedan known for its precise handling and premium interior.',
     },
     {
       model: '911 Carrera',
@@ -89,6 +100,7 @@ export const cars: Car[] = [
       color: 'Red',
       transmissionType: 'Manual',
       numberOfSeats: 2,
+      description: 'The Porsche 911 Carrera is an iconic sports car, offering blistering performance and timeless style.',
     },
     {
       model: 'F8 Tributo',
@@ -98,6 +110,7 @@ export const cars: Car[] = [
       color: 'Yellow',
       transmissionType: 'Automatic',
       numberOfSeats: 2,
+      description: 'Ferrari F8 Tributo is a mid‑engine supercar boasting V8 power, razor‑sharp handling, and exotic flair.',
     },
     {
       model: 'M4 Competition',
@@ -107,6 +120,7 @@ export const cars: Car[] = [
       color: 'Blue',
       transmissionType: 'Automatic',
       numberOfSeats: 2,
+      description: 'The BMW M4 Competition delivers high‑performance driving with a turbocharged engine and track‑ready chassis.',
     },
     {
       model: 'Corvette',
@@ -116,6 +130,7 @@ export const cars: Car[] = [
       color: 'Orange',
       transmissionType: 'Automatic',
       numberOfSeats: 2,
+      description: 'The Chevrolet Corvette is an American sports icon, offering V8 thrills and a mid‑engine layout.',
     },
     {
       model: 'Suburban',
@@ -125,6 +140,7 @@ export const cars: Car[] = [
       color: 'White',
       transmissionType: 'Automatic',
       numberOfSeats: 8,
+      description: 'The Chevrolet Suburban is a full‑size SUV with seating for eight, a powerful engine, and vast cargo space.',
     },
     {
       model: 'Highlander',
@@ -134,6 +150,7 @@ export const cars: Car[] = [
       color: 'Silver',
       transmissionType: 'Automatic',
       numberOfSeats: 7,
+      description: 'The Toyota Highlander is a family‑friendly SUV with three rows, solid reliability, and smooth ride.',
     },
     {
       model: 'Explorer',
@@ -143,6 +160,7 @@ export const cars: Car[] = [
       color: 'Black',
       transmissionType: 'Automatic',
       numberOfSeats: 7,
+      description: 'The Ford Explorer is a versatile SUV offering strong towing capability and a comfortable interior.',
     },
     {
       model: 'Grand Cherokee',
@@ -152,6 +170,7 @@ export const cars: Car[] = [
       color: 'Green',
       transmissionType: 'Automatic',
       numberOfSeats: 5,
+      description: 'The Jeep Grand Cherokee blends off‑road prowess with upscale cabin appointments and modern tech.',
     },
     {
       model: 'Odyssey',
@@ -161,6 +180,7 @@ export const cars: Car[] = [
       color: 'Silver',
       transmissionType: 'Automatic',
       numberOfSeats: 6,
+      description: 'The Honda Odyssey is a top‑rated minivan with family‑oriented features, sliding doors, and a smooth ride.',
     },
     {
       model: 'Sienna',
@@ -170,6 +190,7 @@ export const cars: Car[] = [
       color: 'White',
       transmissionType: 'Automatic',
       numberOfSeats: 7,
+      description: 'The Toyota Sienna is a hybrid minivan offering great fuel economy and versatile seating configurations.',
     },
     {
       model: 'Pacifica',
@@ -179,6 +200,7 @@ export const cars: Car[] = [
       color: 'Blue',
       transmissionType: 'Automatic',
       numberOfSeats: 7,
+      description: 'The Chrysler Pacifica features a refined interior, available hybrid powertrain, and Stow ’n Go seats.',
     },
     {
       model: 'C4 Picasso',
@@ -188,6 +210,7 @@ export const cars: Car[] = [
       color: 'Red',
       transmissionType: 'Automatic',
       numberOfSeats: 5,
+      description: 'The Citroën C4 Picasso is a compact MPV with clever storage, a bright cabin, and a comfortable ride.',
     },
     {
       model: 'Mustang',
@@ -197,6 +220,7 @@ export const cars: Car[] = [
       color: 'Blue',
       transmissionType: 'Manual',
       numberOfSeats: 4,
+      description: 'The Ford Mustang is a classic muscle coupe delivering bold styling and throaty V8 performance.',
     },
     {
       model: 'A5',
@@ -206,6 +230,7 @@ export const cars: Car[] = [
       color: 'Gray',
       transmissionType: 'Automatic',
       numberOfSeats: 4,
+      description: 'The Audi A5 coupe offers elegant design, a high‑quality interior, and smooth, composed handling.',
     },
     {
       model: '4 Series',
@@ -215,6 +240,7 @@ export const cars: Car[] = [
       color: 'Black',
       transmissionType: 'Automatic',
       numberOfSeats: 4,
+      description: 'The BMW 4 Series coupe is a sporty luxury car with a powerful engine and driver‑focused cabin.',
     },
     {
       model: 'TT',
@@ -224,6 +250,7 @@ export const cars: Car[] = [
       color: 'Red',
       transmissionType: 'Manual',
       numberOfSeats: 4,
+      description: 'The Audi TT is a compact coupe known for its distinctive styling and agile handling.',
     },
     {
       model: 'Mini Cooper',
@@ -233,6 +260,7 @@ export const cars: Car[] = [
       color: 'Yellow',
       transmissionType: 'Manual',
       numberOfSeats: 4,
+      description: 'The Mini Cooper is a fun hatchback with go‑kart handling and a customizable, retro‑inspired design.',
     },
     {
       model: 'Golf',
@@ -242,6 +270,7 @@ export const cars: Car[] = [
       color: 'White',
       transmissionType: 'Automatic',
       numberOfSeats: 5,
+      description: 'The Volkswagen Golf is a practical hatchback with a refined ride, upscale interior, and solid build quality.',
     },
     {
       model: 'Focus',
@@ -251,6 +280,7 @@ export const cars: Car[] = [
       color: 'Blue',
       transmissionType: 'Manual',
       numberOfSeats: 5,
+      description: 'The Ford Focus is an agile compact car offering sharp handling and good fuel economy.',
     },
     {
       model: 'Civic Hatch',
@@ -260,7 +290,7 @@ export const cars: Car[] = [
       color: 'Silver',
       transmissionType: 'Automatic',
       numberOfSeats: 5,
-    }
-  ];
+      description: 'The Honda Civic Hatch is a sporty compact hatchback with a spacious interior and strong reliability.',
+    },
+  ]
 
-export default Car

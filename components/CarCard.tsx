@@ -1,5 +1,6 @@
-import Car from '@/types/CarType'
+import {Car} from '@/types/CarType'
 import Image from 'next/image'
+import Link from 'next/link'
 import React from 'react'
 import { GiGearStickPattern } from 'react-icons/gi'
 import { PiSeatbeltDuotone } from 'react-icons/pi'
@@ -32,8 +33,8 @@ const CarCard = ({car}: Props) => {
                     </span>
                 </div>
                 <div className='flex w-full justify-between items-center'>
-                    <span className='font-semibold text-2xl text-black'>${car.price.toFixed(2)}/<span className='font-normal text-xl text-[#90A3BF]'>day</span> </span>
-                    <button className="btn btn-primary">Rent Now</button>
+                    <span className='font-semibold text-xl text-black'>${car.price.toFixed(2)}/<span className='font-normal text-xl text-[#90A3BF]'>day</span> </span>
+                    <Link href={`/cars/${car.model}`} className="btn btn-primary">Rent Now</Link>
                 </div>
             </div>
         </div>

@@ -1,7 +1,7 @@
 import Ads from "@/components/Ads";
 import CarCard from "@/components/CarCard";
 import CarGrid from "@/components/CarGrid";
-import Car, { cars } from "@/types/CarType";
+import {Car, cars } from "@/types/CarType";
 import Image from "next/image";
 
 export default function Home() {

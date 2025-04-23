@@ -9,7 +9,7 @@ type Props = {
 const CarGrid = ({cars}: Props) => {
   return (
     <div className='grid gap-16 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4'>
-       {cars.map(car => <CarCard key={car.model} car={car} />)}
+       {cars.map(car => <CarCard key={car.id} car={car} />)}
     </div>
   )
 }

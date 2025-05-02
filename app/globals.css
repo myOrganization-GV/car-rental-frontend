@@ -7,3 +7,10 @@ body{
 input[type="checkbox"] {
     color-scheme: light;
   }
+#cardNumberSecureField_container, #expirationDateSecureField_container, #securityCodeSecureField_container{
+    height: 40px;
+}
+#cardNumberSecureField_container iframe, #expirationDateSecureField_container iframe, #securityCodeSecureField_container iframe{
+    border-radius: 12px;
+}
+

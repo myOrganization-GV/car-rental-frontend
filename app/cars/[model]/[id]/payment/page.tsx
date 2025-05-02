@@ -7,6 +7,9 @@ import RentalInfoForm from '@/components/RentalInfoForm';
 import RentalSummary from '@/components/RentalSummary';
 import { paymentFormAction } from '@/lib/actions/paymentFormAction';
 import { cars } from '@/types/CarType';
+import { RentalFormData } from '@/types/RentalFormData';
+import { createCardToken } from '@mercadopago/sdk-react';
+
 import React, { useActionState, useState } from 'react'
 
 interface Props {
@@ -34,7 +37,7 @@ const page = ({ params }: Props) => {
   const [state, action, isPending] = useActionState(paymentFormAction, undefined);
   const [currentStep, setCurrentStep] = useState(1);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<RentalFormData>({
     carId: car?.id.toString(),
     carModel: car?.model,
   });
@@ -42,7 +45,14 @@ const page = ({ params }: Props) => {
   const updateFormData = (data: any) => {
     setFormData(prevData => ({ ...prevData, ...data }));
   };
-  const handleNextStep = () => {
+
+
+  const handleNextStep = async () => {
+    if(formData.paymentMethod === "Credit Card") {
+      const token = await createCardToken({cardholderName: "Test CardHolder"})
+      console.log(token)
+      updateFormData({token: token?.id})
+    }
 
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1);
@@ -61,15 +71,15 @@ const page = ({ params }: Props) => {
       <form action={action} className='w-full h-screen'>
 
         {Object.entries(formData).map(([key, value]) => (
-              value !== undefined && value !== null && (
-                  <input
-                      key={key} 
-                      type="hidden"
-                      name={key} 
-                      value={String(value)} 
-                  />
-              )
-          ))}
+          value !== undefined && value !== null && (
+            <input
+              key={key}
+              type="hidden"
+              name={key}
+              value={String(value)}
+            />
+          )
+        ))}
 
 
         {currentStep === 1 && (
@@ -84,17 +94,14 @@ const page = ({ params }: Props) => {
             updateFormData={updateFormData}
           />
         )}
+        
         {currentStep === 3 && (
-          <PaymentForm
-            formData={formData}
-            updateFormData={updateFormData}
-          />
+          <PaymentForm formData={formData}
+           updateFormData={updateFormData} />
         )}
         {currentStep === 4 && (
-          <RentalConfirmationForm
-            formData={formData}
-            updateFormData={updateFormData}
-          />
+          <RentalConfirmationForm formData={formData}
+           updateFormData={updateFormData} />
         )}
         <div className="flex justify-between mx-auto p-4 rounded-xl bg-white">
           {(
@@ -102,19 +109,21 @@ const page = ({ params }: Props) => {
               Back
             </button>
           )}
-          {currentStep < totalSteps? (
+          {(currentStep < totalSteps ) && (
             <button type="button" onClick={handleNextStep} className="cursor-pointer btn btn-primary">
               Next
             </button>
-          ) : (
-            <button type="submit" disabled={isPending} className="bg-blue-600 hover:bg-blue-700 text-white p-2  rounded-md font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-              {isPending ? 'Processing...' : 'Complete Rental'} 
+          )} 
+          
+          {(currentStep == totalSteps ) && (
+            <button type="submit" disabled={isPending} className="bg-blue-600 hover:bg-blue-700 text-white p-2 cursor-pointer rounded-md font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+              {isPending ? 'Processing...' : 'Complete Rental'}
             </button>
           )}
         </div>
       </form>
       <div className='w-full h-full rounded-xl bg-white'>
-          <RentalSummary car={car} formData={formData}/>
+        <RentalSummary car={car} formData={formData} />
       </div>
     </div>
   )

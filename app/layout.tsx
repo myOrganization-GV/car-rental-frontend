@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import MercadoPagoProvider from "@/components/MercadoPagoProvider";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-geist-sans",
@@ -25,9 +26,11 @@ export default function RootLayout({
       <body
         className={`${plusJakartaSans.variable} ${plusJakartaSans.variable} antialiased`}
       >
-        <Navbar/>
-        {children}
-        <Footer/>
+        <Navbar />
+          <MercadoPagoProvider>
+            {children}
+          </MercadoPagoProvider>
+        <Footer />
       </body>
     </html>
   );

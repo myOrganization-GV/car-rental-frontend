@@ -20,10 +20,10 @@ export interface RentalFormData {
     cardNumber?: string;
     cardExpiry?: string; 
     cardCVC?: string;
-
+    token?: string;
     //step 4: Confirmation fields
-    marketing?: boolean
-    terms?: boolean
+    marketing?: boolean;
+    terms?: boolean;
 }
 
 export type UpdateRentalFormData = (data: Partial<RentalFormData>) => void;

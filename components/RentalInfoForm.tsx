@@ -66,7 +66,7 @@ const RentalInfoForm = ({ formData, updateFormData, }: Props) => {
                     <select
                         id="rentalPickupLocation"
                         name="rentalPickupLocation" 
-                        className={`select select-bordered w-full font-normal bg-[#F6F7F9] px-2 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                        className={`select flex items-center select-bordered w-full font-normal bg-[#F6F7F9] px-2 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         value={formData.rentalPickupLocation || ''}
                         onChange={handleChange}
                     >
@@ -86,7 +86,7 @@ const RentalInfoForm = ({ formData, updateFormData, }: Props) => {
                         type="date"
                         id="rentalPickupDate"
                         name="rentalPickupDate"
-                        className={`w-full font-normal bg-[#F6F7F9] px-2 py-1 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                        className={`w-full font-normal bg-[#F6F7F9] px-2 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         value={formData.rentalPickupDate || ''} onChange={handleChange}
                     />
                 </div>
@@ -122,7 +122,7 @@ const RentalInfoForm = ({ formData, updateFormData, }: Props) => {
                         type="date"
                         id="rentalDropoffDate"
                         name="rentalDropoffDate"
-                        className={`w-full font-normal bg-[#F6F7F9] px-2 py-1 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                        className={`w-full font-normal bg-[#F6F7F9] px-2 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         value={formData.rentalDropoffDate || ''} onChange={handleChange}
                     />
                 </div>

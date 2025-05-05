@@ -1,15 +1,23 @@
 "use client"
 import { Car } from '@/types/CarType'
-import Image from 'next/image'
 import Link from 'next/link'
 import React, { useState } from 'react'
 type Props = {
-    car: Car
+    cars: Car[]
 }
 
-const CarDetailsCard = ({ car }: Props) => {
-    const colors = ["red", "green", "blue"];
-    const [selectedColor, setSelectedColor] = useState<string | null>(null)
+const CarDetailsCard = ({ cars }: Props) => {
+    const colors = cars.map(car => car.color);
+    const car = cars[0]
+    const [selectedColor, setSelectedColor] = useState<string | null>(car.color)
+    const [selectedCar, setSelectedCar] = useState<Car>()
+
+    const handleClick = (color: string) =>{
+        setSelectedColor(color)
+        setSelectedCar(cars.find(car => car.color === color))
+    }
+
+
     return (
         <div className='rounded-xl self-start sm:flex text-black w-[315px] relative flex-col gap-5 p-5 sm:w-[450px] h-full bg-white'>
             <div className='flex flex-col text-black gap-1 w-full'>
@@ -27,7 +35,7 @@ const CarDetailsCard = ({ car }: Props) => {
                     Transmission <span className='text-[#596780]'>{car.transmissionType}</span>
                 </div>
                 <div className="flex text-[#90A3BF] justify-between items-center">
-                    Manufacturer <span className='text-[#596780]'>{car.manufactorer}</span>
+                    Manufacturer <span className='text-[#596780]'>{car.manufacturer}</span>
                 </div>
             </div>
             <div className=' flex-wrap flex gap-x-2 w-full h-14'>
@@ -37,20 +45,20 @@ const CarDetailsCard = ({ car }: Props) => {
                     return (
                         <button
                             key={color}
-                            onClick={() => setSelectedColor(color)}
+                            onClick={() => handleClick(color)}
                             aria-label={`Select ${color}`}
                             className={`
                 w-6 h-6 rounded-full border cursor-pointer 
-                ${isActive ? 'border-2 border-black' : 'border-[#596780]'}
+                ${isActive ? 'border-2 border-blue-300' : 'border-black'}
               `}
-                            style={{ backgroundColor: color }}
+                            style={{ backgroundColor: "blue" }}
                         />
                     )
                 })}
             </div>
             <div className='flex w-full justify-between items-center'>
-                <span className='font-semibold text-xl text-black'>${car.price.toFixed(2)}/<span className='font-normal text-xl text-[#90A3BF]'>day</span> </span>
-                <Link href={{pathname: `/cars/${car.model}/${car.id}/payment`}} className="btn btn-primary">Rent Now</Link>
+                <span className='font-semibold text-xl text-black'>${car.pricePerDay.toFixed(2)}/<span className='font-normal text-xl text-[#90A3BF]'>day</span> </span>
+                <Link href={{pathname: `/cars/${car.model}/${car.carId}/payment`}} className="btn btn-primary">Rent Now</Link>
             </div>
         </div>
     )

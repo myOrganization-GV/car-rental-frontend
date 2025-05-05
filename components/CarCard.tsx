@@ -33,7 +33,7 @@ const CarCard = ({car}: Props) => {
                     </span>
                 </div>
                 <div className='flex w-full justify-between items-center'>
-                    <span className='font-semibold text-xl text-black'>${car.price.toFixed(2)}/<span className='font-normal text-xl text-[#90A3BF]'>day</span> </span>
+                    <span className='font-semibold text-xl text-black'>${car.pricePerDay.toFixed(2)}/<span className='font-normal text-xl text-[#90A3BF]'>day</span> </span>
                     <Link href={`/cars/${car.model}`} className="btn btn-primary">Rent Now</Link>
                 </div>
             </div>

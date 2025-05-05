@@ -16,7 +16,7 @@ const RentalSummary = ({ car, formData }: Props) => {
         const dropoffDateStr = formData.rentalDropoffDate;
         if(!pickupDateStr || !dropoffDateStr) return
         const differenceInDays = differenceInCalendarDays(dropoffDateStr, pickupDateStr) + 1;
-        return differenceInDays * car.price;
+        return differenceInDays * car.pricePerDay;
     }
 
 
@@ -52,7 +52,7 @@ const RentalSummary = ({ car, formData }: Props) => {
             <div className='flex flex-col my-5 gap-5'>
                 <div className='flex justify-between'>
                     <span className='text-[#90A3BF] text-[16px]'>Price per day</span>
-                    <span className='text-[#1A202C]'>${car.price.toFixed(2)}</span>
+                    <span className='text-[#1A202C]'>${car.pricePerDay.toFixed(2)}</span>
                 </div>
                 <div className='flex justify-between'>
                     <span className='text-[#90A3BF] text-[16px]'>Subtotal</span>

@@ -1,11 +1,38 @@
 import Ads from "@/components/Ads";
-import CarCard from "@/components/CarCard";
 import CarGrid from "@/components/CarGrid";
-import {Car, cars } from "@/types/CarType";
-import Image from "next/image";
+import {Car} from "@/types/CarType";
 
-export default function Home() {
 
+async function fetchCars(): Promise<Car[]> {
+  try {
+    const response = await fetch(`${process.env.BACKEND_URL}/inventory/cars`, {
+       cache: 'no-store' 
+    });
+    if (!response.ok) {
+      console.error(`Error fetching cars: ${response.status} ${response.statusText}`);
+      throw new Error(`Failed to fetch cars: ${response.statusText}`);
+    }
+    const carsData: Car[] = await response.json();
+    return carsData;
+  } catch (error) {
+    console.error("Failed to fetch cars:", error);
+    return [];
+  }
+}
+
+
+export default async function Home() {
+  const cars = await fetchCars();
+  
+  const uniqueModelsMap = new Map<string, Car>(); 
+  cars.forEach(car => {
+    if (!uniqueModelsMap.has(car.model)) {
+      uniqueModelsMap.set(car.model, car);
+    }
+  });
+
+  const uniqueModelCars: Car[] = Array.from(uniqueModelsMap.values());
+  console.log(uniqueModelCars)
   return (
     <div className="flex flex-col">
       <div className="grid bg-[#F6F7F9] p-[10px]  sm:p-[60px] grid-cols-1 md:grid-cols-2 gap-10 ">
@@ -20,7 +47,7 @@ export default function Home() {
             <span className="absolute bottom-0 left-1/2 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full group-hover:left-0 transform -translate-x-1/2 group-hover:translate-x-0"></span>
           </button>
         </div>
-        <CarGrid cars={cars} />
+        <CarGrid cars={uniqueModelCars} />
       </div>
     </div>
   );

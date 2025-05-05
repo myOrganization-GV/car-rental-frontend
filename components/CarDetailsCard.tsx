@@ -10,12 +10,16 @@ const CarDetailsCard = ({ cars }: Props) => {
     const colors = cars.map(car => car.color);
     const car = cars[0]
     const [selectedColor, setSelectedColor] = useState<string | null>(car.color)
-    const [selectedCar, setSelectedCar] = useState<Car>()
+    const [selectedCar, setSelectedCar] = useState<Car>(car)
 
     const handleClick = (color: string) =>{
         setSelectedColor(color)
-        setSelectedCar(cars.find(car => car.color === color))
+        const foundCar = cars.find(car => car.color === color)
+        if(foundCar) {
+            setSelectedCar(foundCar)
+        }
     }
+
 
 
     return (
@@ -51,14 +55,14 @@ const CarDetailsCard = ({ cars }: Props) => {
                 w-6 h-6 rounded-full border cursor-pointer 
                 ${isActive ? 'border-2 border-blue-300' : 'border-black'}
               `}
-                            style={{ backgroundColor: "blue" }}
+                            style={{ backgroundColor: color }}
                         />
                     )
                 })}
             </div>
             <div className='flex w-full justify-between items-center'>
                 <span className='font-semibold text-xl text-black'>${car.pricePerDay.toFixed(2)}/<span className='font-normal text-xl text-[#90A3BF]'>day</span> </span>
-                <Link href={{pathname: `/cars/${car.model}/${car.carId}/payment`}} className="btn btn-primary">Rent Now</Link>
+                <Link href={{pathname: `/cars/${car.model}/${selectedCar?.carId}/payment`}} className="btn btn-primary">Rent Now</Link>
             </div>
         </div>
     )

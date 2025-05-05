@@ -9,7 +9,11 @@ type Props = {
     car: Car
 }
 
+
+
 const CarCard = ({car}: Props) => {
+    
+
     return (
         <div className='rounded-lg relative flex flex-col justify-between p-5 w-full  h-[380px] bg-white'>
             <div className='flex flex-col text-black gap-1 w-full'>

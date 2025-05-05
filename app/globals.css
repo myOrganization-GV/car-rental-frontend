@@ -12,5 +12,6 @@ input[type="checkbox"] {
 }
 #cardNumberSecureField_container iframe, #expirationDateSecureField_container iframe, #securityCodeSecureField_container iframe{
     border-radius: 12px;
+    background-color: white;
 }
 

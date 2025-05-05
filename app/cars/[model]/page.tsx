@@ -29,11 +29,9 @@ interface Props {
     
 
 const page = async ({params}: Props) => {
-  const {model} = params
+  const {model} = await params
   const cars = await fetchCarsWithSameModel(model);
-
-
-  const car = cars.find(car => car.model.toLowerCase() === model.toLowerCase());
+  const car = cars[0]
   if(!car){
     return <CarNotFound/>
   }

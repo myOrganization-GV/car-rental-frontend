@@ -25,6 +25,7 @@ const PaymentForm = ({ formData, updateFormData, }: Props) => {
       const cardStyle = {
         fontFamily:   "Inter, sans-serif",
         fontSize:     "1rem",
+        backgroundColor: "white",
         color:        "#111827",
         border:       "1px solid red",
         padding:      "0.5rem 1rem",

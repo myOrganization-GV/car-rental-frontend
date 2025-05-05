@@ -79,7 +79,7 @@ const RentalSummary = ({ car, formData }: Props) => {
                     <div className='text-[#90A3BF] text-[16px]'>Overall price and includes rental discount</div>
                 </div>
                 <div className='flex justify-between'>
-                    <span className='font-bold text-[24px] text-[#1A202C]'>${calculateRentalPrice()?.toFixed(2)}</span>
+                    {calculateRentalPrice() && <span className='font-bold text-[24px] text-[#1A202C]'>${calculateRentalPrice()?.toFixed(2)}</span>}
                 </div>
             </div>
         </div>

@@ -30,9 +30,7 @@ export default async function Home() {
       uniqueModelsMap.set(car.model, car);
     }
   });
-
   const uniqueModelCars: Car[] = Array.from(uniqueModelsMap.values());
-  console.log(uniqueModelCars)
   return (
     <div className="flex flex-col">
       <div className="grid bg-[#F6F7F9] p-[10px]  sm:p-[60px] grid-cols-1 md:grid-cols-2 gap-10 ">

@@ -8,6 +8,7 @@ import RentalSummary from '@/components/RentalSummary';
 import { paymentFormAction } from '@/lib/actions/paymentFormAction';
 import { Car } from '@/types/CarType';
 import { RentalFormData } from '@/types/RentalFormData';
+import { RentalFormError } from '@/types/RentalFormError';
 import { createCardToken } from '@mercadopago/sdk-react';
 
 import React, { useActionState, useState } from 'react'
@@ -29,6 +30,7 @@ const totalSteps = 4;
 
 const ClientContent = ({ car }: Props) => {
   const [state, action, isPending] = useActionState(paymentFormAction, undefined);
+  const [formErrors, setFormErrors] = useState<RentalFormError[]>([]);
   const [currentStep, setCurrentStep] = useState(1);
 
   const [formData, setFormData] = useState<RentalFormData>({
@@ -41,7 +43,14 @@ const ClientContent = ({ car }: Props) => {
   };
 
 
+
   const handleNextStep = async () => {
+    if(currentStep === 1){
+      if(!validateBillingForm(formData, setFormErrors)) {
+        return
+      }
+      console.log("entering step 2")
+    }
     if(formData.paymentMethod === "Credit Card") {
       const token = await createCardToken({cardholderName: "Test CardHolder"})
       console.log(token)
@@ -63,7 +72,6 @@ const ClientContent = ({ car }: Props) => {
   return (
     <div className='sm:p-[60px] p-[10px] w-full mx-auto place-items-center gap-8 text-black grid grid-cols-1 lg:grid-cols-2 bg-[#F6F7F9] '>
       <form action={action} className='w-full h-screen'>
-
         {Object.entries(formData).map(([key, value]) => (
           value !== undefined && value !== null && (
             <input
@@ -80,6 +88,7 @@ const ClientContent = ({ car }: Props) => {
           <BillingForm
             formData={formData}
             updateFormData={updateFormData}
+            errors={formErrors}
           />
         )}
         {currentStep === 2 && (
@@ -124,3 +133,33 @@ const ClientContent = ({ car }: Props) => {
 }
 
 export default ClientContent
+
+const validateBillingForm = (formData: RentalFormData, setFormErrors: React.Dispatch<React.SetStateAction<RentalFormError[]>>) =>{
+  const newErrors: RentalFormError[] = [];
+  if (!formData.name) {
+    newErrors.push({ field: 'name', message: 'Name is required' });
+  }
+  if(formData.name && formData.name?.length <= 5) {
+    newErrors.push({ field: 'name', message: 'Name is too short' })
+  }
+  if (!formData.city) {
+    newErrors.push({ field: 'city', message: 'city is required' });
+  }
+  if(formData.city && formData.city?.length <= 2) {
+    newErrors.push({ field: 'city', message: 'city is too short' })
+  }
+
+  if (!formData.address) {
+    newErrors.push({ field: 'address', message: 'Address is required'});
+  }
+
+  if(!formData.zipCode){
+    newErrors.push({ field: 'zipcode', message: 'Zipcode is required'});
+  }
+
+  if(formData.zipCode && !/^\d{5}-\d{3}$/.test(formData.zipCode)){
+     newErrors.push({ field: 'zipcode', message: 'Invalid zipcode format (11111-111)' });
+  } 
+  setFormErrors(newErrors);
+  return newErrors.length === 0;
+}

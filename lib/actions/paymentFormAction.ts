@@ -8,7 +8,7 @@ export async function paymentFormAction(prevState: any, formData: FormData) {
   if (rawFormData.paymentMethod === "Credit Card") {
     console.log("Processing Credit Card payment in Server Action...");
     try {
-      const backendUrl = process.env.BACKEND_URL;
+      const backendUrl = "http://localhost:9090";
 
       if (!backendUrl) {
         console.error("BACKEND_URL environment variable is not set.");

@@ -10,7 +10,7 @@ type Props = {}
 
 const SigninForm = (props: Props) => {
     const [state, action, isPending] = useActionState(signinFormAction, undefined);
-
+    console.log(state?.type)
     return (
         <form action={action} className='w-1/3 mx-auto bg-white h-full p-4 rounded-lg'>
             <div className='text-[#90A3BF] grid gap-5 grid-cols-2'>

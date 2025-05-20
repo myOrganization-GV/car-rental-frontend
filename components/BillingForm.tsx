@@ -1,13 +1,14 @@
 "use client"
-import { signupFormAction } from '@/lib/actions/signupFormAction';
-import React, { useActionState } from 'react'
+import { RentalFormError } from '@/types/RentalFormError';
+import React from 'react'
 
 interface Props {
     formData: any;
     updateFormData: (data: any) => void;
+    errors: RentalFormError[]
 }
 
-const BillingForm = ({ formData, updateFormData }: Props) => {
+const BillingForm = ({ formData, updateFormData, errors }: Props) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         updateFormData({ [e.target.name]: e.target.value });
     };
@@ -17,8 +18,8 @@ const BillingForm = ({ formData, updateFormData }: Props) => {
             <div className='mb-5'>
                 <h2 className='font-bold text-[20px]'>Billing Info</h2>
                 <div className='flex font-semibold text-[14px] text-[#90A3BF] justify-between'>
-                    <span >Please enter your billing info</span>  
-                    <span >Step 1 of 4</span>  
+                    <span >Please enter your billing info</span>
+                    <span >Step 1 of 4</span>
                 </div>
 
             </div>
@@ -33,7 +34,9 @@ const BillingForm = ({ formData, updateFormData }: Props) => {
                         placeholder='Name'
                         value={formData.name || ''} onChange={handleChange}
                     />
+                    {errors.find(error => error.field === "name") && <p className="text-red-600">{errors.find(error => error.field === 'name')?.message}</p>}
                 </div>
+
                 <div>
                     <label htmlFor="address" className="block text-sm  mb-1">Address</label>
                     <input
@@ -45,17 +48,19 @@ const BillingForm = ({ formData, updateFormData }: Props) => {
                         className={`w-full font-normal bg-[#F6F7F9] px-2 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         placeholder='Address'
                     />
+                    {errors.find(error => error.field === "address") && <p className="text-red-600">{errors.find(error => error.field === 'address')?.message}</p>}
                 </div>
                 <div className='col-span-1'>
-                    <label htmlFor="zipcode" className="block text-sm   mb-1">Zipcode</label>
+                    <label htmlFor="zipCode" className="block text-sm   mb-1">Zipcode</label>
                     <input
                         type="text"
-                        id="zipcode"
-                        name="zipcode"
+                        id="zipCode"
+                        name="zipCode"
                         className={`w-full font-normal bg-[#F6F7F9] px-2 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                        value={formData.zipcode || ''} onChange={handleChange}
-                        placeholder='zipcode Code'
+                        value={formData.zipCode || ''} onChange={handleChange}
+                        placeholder='xxxxx-xxx'
                     />
+                    {errors.find(error => error.field === "zipcode") && <p className="text-red-600">{errors.find(error => error.field === 'zipcode')?.message}</p>}
                 </div>
                 <div className='col-span-1'>
                     <label htmlFor="city" className="block text-sm   mb-1">City</label>
@@ -67,6 +72,7 @@ const BillingForm = ({ formData, updateFormData }: Props) => {
                         placeholder='city'
                         value={formData.city || ''} onChange={handleChange}
                     />
+                    {errors.find(error => error.field === "city") && <p className="text-red-600">{errors.find(error => error.field === 'city')?.message}</p>}
                 </div>
 
                 {/*         <div className="mt-2 col-span-2 w-1/2 mx-auto">

@@ -16,7 +16,6 @@ async function fetchCarById(id:string): Promise<Car|null> {
         throw new Error(`Failed to fetch car: ${response.statusText}`);
       }
       const car: Car = await response.json();
-      console.log("Fetched car data:", car);
       return car;
     } catch (error) {
       console.error("Failed to fetch car:", error);
@@ -24,7 +23,7 @@ async function fetchCarById(id:string): Promise<Car|null> {
     }
   }
 const page = async ({params}: Props) => {
-  const {id} = params;
+  const {id} = await params;
   const car = await fetchCarById(id);
 
   return (

@@ -2,7 +2,6 @@ import { RentalFormData, UpdateRentalFormData } from '@/types/RentalFormData';
 import { easeInOut, motion, useAnimate } from 'motion/react';
 import Image from 'next/image';
 import React, { useEffect } from 'react'
-import { loadMercadoPago } from "@mercadopago/sdk-js";
 import { CardNumber, ExpirationDate, SecurityCode } from '@mercadopago/sdk-react';
 
 

@@ -1,4 +1,6 @@
 import { RentalFormData, UpdateRentalFormData } from '@/types/RentalFormData';
+import { RentalFormError } from '@/types/RentalFormError';
+import { before } from 'node:test';
 import React, { useState } from 'react'
 import { DayPicker, SelectSingleEventHandler } from "react-day-picker";
 
@@ -6,9 +8,22 @@ import { DayPicker, SelectSingleEventHandler } from "react-day-picker";
 interface Props {
     formData: RentalFormData;
     updateFormData: UpdateRentalFormData;
+    errors: RentalFormError[]
 }
 
-const RentalInfoForm = ({ formData, updateFormData, }: Props) => {
+const RentalInfoForm = ({ formData, updateFormData, errors }: Props) => {
+
+    const today = new Date();
+    const todayISOString = today.toISOString().split('T')[0];
+    let minDropoffDate: string | undefined;
+    if (formData.rentalPickupDate) {
+        const pickupDateObj = new Date(formData.rentalPickupDate + 'T00:00:00'); 
+        pickupDateObj.setDate(pickupDateObj.getDate() + 1);
+        minDropoffDate = pickupDateObj.toISOString().split('T')[0];
+    } else {
+        minDropoffDate = todayISOString;
+    }
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         updateFormData({ [e.target.name]: e.target.value });
     };
@@ -18,27 +33,6 @@ const RentalInfoForm = ({ formData, updateFormData, }: Props) => {
     const [dropoffDate, setDropoffDate] = useState<Date | undefined>(
         formData.rentalDropoffDate ? new Date(formData.rentalDropoffDate) : undefined
     );
-    const handlePickupDateSelect: SelectSingleEventHandler = (date) => {
-        setPickupDate(date);
-
-        if (date) {
-            updateFormData({ rentalPickupDate: date.toISOString().split('T')[0] });
-        } else {
-
-            updateFormData({ rentalPickupDate: undefined });
-        }
-    };
-
-    const handleDropoffDateSelect: SelectSingleEventHandler = (date) => {
-        setDropoffDate(date);
-
-        if (date) {
-            updateFormData({ rentalDropoffDate: date.toISOString().split('T')[0] });
-        } else {
-
-            updateFormData({ rentalDropoffDate: undefined });
-        }
-    };
 
     const locations = [
         "New York, NY",
@@ -65,7 +59,7 @@ const RentalInfoForm = ({ formData, updateFormData, }: Props) => {
                     <label htmlFor="rentalPickupLocation" className="block text-sm mb-1">Pickup Location</label>
                     <select
                         id="rentalPickupLocation"
-                        name="rentalPickupLocation" 
+                        name="rentalPickupLocation"
                         className={`select flex items-center select-bordered w-full font-normal bg-[#F6F7F9] px-2 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         value={formData.rentalPickupLocation || ''}
                         onChange={handleChange}
@@ -78,6 +72,7 @@ const RentalInfoForm = ({ formData, updateFormData, }: Props) => {
                             </option>
                         ))}
                     </select>
+                    {errors.find(error => error.field === "rentalPickupLocation") && <p className="text-red-600">{errors.find(error => error.field === 'rentalPickupLocation')?.message}</p>}
                 </div>
                 <div className=''>
                     <label htmlFor="rentalPickupDate" className="block text-sm mb-1"> Pick-Up Date</label>
@@ -88,7 +83,9 @@ const RentalInfoForm = ({ formData, updateFormData, }: Props) => {
                         name="rentalPickupDate"
                         className={`w-full font-normal bg-[#F6F7F9] px-2 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         value={formData.rentalPickupDate || ''} onChange={handleChange}
+                        min={todayISOString}
                     />
+                    {errors.find(error => error.field === "rentalPickupDate") && <p className="text-red-600">{errors.find(error => error.field === 'rentalPickupDate')?.message}</p>}
                 </div>
 
             </div>
@@ -100,7 +97,7 @@ const RentalInfoForm = ({ formData, updateFormData, }: Props) => {
                     <label htmlFor="rentalDropoffLocation" className="block text-sm mb-1">Dropoff Location</label>
                     <select
                         id="rentalDropoffLocation"
-                        name="rentalDropoffLocation" 
+                        name="rentalDropoffLocation"
                         className={`select select-bordered w-full font-normal bg-[#F6F7F9] px-2 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         value={formData.rentalDropoffLocation || ''}
 
@@ -114,6 +111,7 @@ const RentalInfoForm = ({ formData, updateFormData, }: Props) => {
                             </option>
                         ))}
                     </select>
+                     {errors.find(error => error.field === "rentalDropoffLocation") && <p className="text-red-600">{errors.find(error => error.field === 'rentalDropoffLocation')?.message}</p>}
                 </div>
                 <div data-theme="light">
                     <label htmlFor="rentalDropoffDate" className="block text-sm mb-1"> Drop-Off Date</label>
@@ -122,9 +120,11 @@ const RentalInfoForm = ({ formData, updateFormData, }: Props) => {
                         type="date"
                         id="rentalDropoffDate"
                         name="rentalDropoffDate"
+                        min={minDropoffDate}
                         className={`w-full font-normal bg-[#F6F7F9] px-2 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         value={formData.rentalDropoffDate || ''} onChange={handleChange}
                     />
+                    {errors.find(error => error.field === "rentalDropoffDate") && <p className="text-red-600">{errors.find(error => error.field === 'rentalDropoffDate')?.message}</p>}
                 </div>
 
             </div>

@@ -49,8 +49,13 @@ const ClientContent = ({ car }: Props) => {
       if(!validateBillingForm(formData, setFormErrors)) {
         return
       }
-      console.log("entering step 2")
     }
+    if(currentStep === 2){
+      if(!validateRentalInfoForm(formData, setFormErrors)) {
+        return
+      }
+    }
+
     if(formData.paymentMethod === "Credit Card") {
       const token = await createCardToken({cardholderName: "Test CardHolder"})
       console.log(token)
@@ -95,6 +100,7 @@ const ClientContent = ({ car }: Props) => {
           <RentalInfoForm
             formData={formData}
             updateFormData={updateFormData}
+            errors={formErrors}
           />
         )}
         
@@ -163,3 +169,39 @@ const validateBillingForm = (formData: RentalFormData, setFormErrors: React.Disp
   setFormErrors(newErrors);
   return newErrors.length === 0;
 }
+
+const validateRentalInfoForm = (formData: RentalFormData, setFormErrors: React.Dispatch<React.SetStateAction<RentalFormError[]>>) =>{
+  const newErrors: RentalFormError[] = [];
+  if (!formData.rentalPickupDate) {
+    newErrors.push({ field: 'rentalPickupDate', message: 'Pick up date is required' });
+  }
+  if (!formData.rentalDropoffDate) {
+    newErrors.push({ field: 'rentalDropoffDate', message: 'Drop off date is required' });
+  }
+  if (!formData.rentalPickupLocation) {
+    newErrors.push({ field: 'rentalPickupLocation', message: 'Pick up location is required' });
+  }
+  if (!formData.rentalDropoffLocation) {
+    newErrors.push({ field: 'rentalDropoffLocation', message: 'Drop off location is required' });
+  }
+  
+  if (formData.rentalPickupDate && formData.rentalDropoffDate) {
+    const pickupDate = new Date(formData.rentalPickupDate);
+    const dropoffDate = new Date(formData.rentalDropoffDate);
+
+    pickupDate.setHours(0, 0, 0, 0);
+    dropoffDate.setHours(0, 0, 0, 0);
+
+    const differenceInMilliseconds = dropoffDate.getTime() - pickupDate.getTime();
+    const oneDayInMilliseconds = 24 * 60 * 60 * 1000; 
+    if (differenceInMilliseconds < oneDayInMilliseconds) {
+      newErrors.push({
+        field: 'rentalDropoffDate',
+        message: 'Drop off date must be at least one day after pick up date'
+      });
+    }
+  }
+  setFormErrors(newErrors);
+  return newErrors.length === 0;
+}
+

@@ -60,10 +60,22 @@ const ClientContent = ({ car }: Props) => {
       if(!formData.paymentMethod) return
     }
 
-    if (formData.paymentMethod === "Credit Card") {
-      const token = await createCardToken({ cardholderName: "Test CardHolder" })
-      console.log(token)
-      updateFormData({ token: token?.id })
+    if (currentStep === 3 && formData.paymentMethod === "Credit Card") {
+      try {
+        const token = await createCardToken({ cardholderName: "Test CardHolder" })
+        updateFormData({ token: token?.id })
+      }catch(error: any){
+        if(!Array.isArray(error))return 
+
+        const newErrors: RentalFormError[] = [];
+        (error as Array<RentalFormError>).forEach(err => {
+          newErrors.push({field: err.field, message: err.message})
+        })
+        setFormErrors(newErrors);
+        return
+      }
+
+      if(!formData.token)return
     }
 
     if(formData.paymentMethod === "Pix"){
@@ -80,11 +92,10 @@ const ClientContent = ({ car }: Props) => {
       setCurrentStep(currentStep - 1);
     }
   };
-
-
+  console.log(formData.token)
   return (
     <div className='sm:p-[60px] p-[10px] w-full mx-auto place-items-center gap-8 text-black grid grid-cols-1 lg:grid-cols-2 bg-[#F6F7F9] '>
-      <form action={action} className='w-full h-screen'>
+      <form action={action} className='w-full h-full'>
         {Object.entries(formData).map(([key, value]) => (
           value !== undefined && value !== null && (
             <input
@@ -120,7 +131,7 @@ const ClientContent = ({ car }: Props) => {
           <RentalConfirmationForm formData={formData}
             updateFormData={updateFormData} />
         )}
-        <div className="flex justify-between mx-auto p-4 rounded-xl bg-white">
+        <div className="flex justify-between mx-auto p-4 rounded-b-xl bg-white">
           {(
             <button disabled={currentStep <= 1} type="button" onClick={handlePrevStep} className="btn  cursor-pointer p-2 font-semibold">
               Back

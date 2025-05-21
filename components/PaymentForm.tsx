@@ -4,7 +4,7 @@ import Image from 'next/image';
 import React, { useEffect } from 'react'
 import { CardNumber, ExpirationDate, SecurityCode } from '@mercadopago/sdk-react';
 import { RentalFormError } from '@/types/RentalFormError';
-import { InputMask } from '@react-input/mask'; 
+import { InputMask } from '@react-input/mask';
 
 
 interface Props {
@@ -14,9 +14,8 @@ interface Props {
 }
 
 
-const PaymentForm = ({ formData, updateFormData,errors }: Props) => {
+const PaymentForm = ({ formData, updateFormData, errors }: Props) => {
     const [scope, animate] = useAnimate();
-
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         updateFormData({ [e.target.name]: e.target.value });
@@ -70,7 +69,7 @@ const PaymentForm = ({ formData, updateFormData,errors }: Props) => {
 
 
     return (
-        <div ref={scope} className='mx-auto h-[635px] rounded-t-xl font-semibold text-black bg-white p-4'>
+        <div ref={scope} className='mx-auto overflow-y-scroll h-[635px] rounded-t-xl font-semibold text-black bg-white p-4'>
             <div className='mb-5'>
                 <h2 className='font-bold text-[20px]'>Rental Info</h2>
                 <div className='flex font-semibold text-[14px] text-[#90A3BF] justify-between'>
@@ -102,14 +101,17 @@ const PaymentForm = ({ formData, updateFormData,errors }: Props) => {
                 <div className='flex flex-col gap-4'>
                     <div>Card Number</div>
                     <CardNumber placeholder='Card Number' style={cardStyle} />
+                    {errors.find(error => error.field === "cardNumber") && <p className="text-red-600">{errors.find(error => error.field === 'cardNumber')?.message}</p>}
                 </div>
                 <div className='flex flex-col gap-4'>
                     <div>Expiration Date</div>
                     <ExpirationDate placeholder='mm-yy' style={cardStyle} />
+                    {errors.find(error => error.field === "expirationDate" ||  error.field === "expirationMonth" || error.field === "expirationYear") && <p className="text-red-600">{errors.find(error => error.field === "expirationDate" ||  error.field === "expirationMonth" || error.field === "expirationYear")?.message}</p>}
                 </div>
                 <div className='flex flex-col gap-4'>
                     <div>CVV</div>
                     <SecurityCode placeholder='CVV' style={cardStyle} />
+                    {errors.find(error => error.field === "securityCode") && <p className="text-red-600">{errors.find(error => error.field === 'securityCode')?.message}</p>}
                 </div>
 
             </div>

@@ -8,7 +8,7 @@ export interface RentalFormData {
     address?: string;
     city?: string;
     zipCode?: string;
-
+    cardholderName?: string;
 
     // Step 2: RentalInfoForm fields
     rentalPickupLocation?: string;

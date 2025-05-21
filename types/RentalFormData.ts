@@ -21,6 +21,13 @@ export interface RentalFormData {
     cardExpiry?: string; 
     cardCVC?: string;
     token?: string;
+
+    //pix payer field
+    payerFirstName?: string;
+    payerLastName?: string;
+    payerIdentificationType?: string;
+    payerIdentificationNumber?: string;
+    payerEmail?:string;
     //step 4: Confirmation fields
     marketing?: boolean;
     terms?: boolean;

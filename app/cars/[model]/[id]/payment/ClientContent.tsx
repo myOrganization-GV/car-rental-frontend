@@ -45,21 +45,29 @@ const ClientContent = ({ car }: Props) => {
 
 
   const handleNextStep = async () => {
-    if(currentStep === 1){
-      if(!validateBillingForm(formData, setFormErrors)) {
+    if (currentStep === 1) {
+      if (!validateBillingForm(formData, setFormErrors)) {
         return
       }
     }
-    if(currentStep === 2){
-      if(!validateRentalInfoForm(formData, setFormErrors)) {
+    if (currentStep === 2) {
+      if (!validateRentalInfoForm(formData, setFormErrors)) {
         return
       }
     }
 
-    if(formData.paymentMethod === "Credit Card") {
-      const token = await createCardToken({cardholderName: "Test CardHolder"})
+    if (currentStep === 3) {
+      if(!formData.paymentMethod) return
+    }
+
+    if (formData.paymentMethod === "Credit Card") {
+      const token = await createCardToken({ cardholderName: "Test CardHolder" })
       console.log(token)
-      updateFormData({token: token?.id})
+      updateFormData({ token: token?.id })
+    }
+
+    if(formData.paymentMethod === "Pix"){
+      if(!validatePixPaymentForm(formData, setFormErrors)) return
     }
 
     if (currentStep < totalSteps) {
@@ -103,14 +111,14 @@ const ClientContent = ({ car }: Props) => {
             errors={formErrors}
           />
         )}
-        
+
         {currentStep === 3 && (
           <PaymentForm formData={formData}
-           updateFormData={updateFormData} />
+            updateFormData={updateFormData} errors={formErrors} />
         )}
         {currentStep === 4 && (
           <RentalConfirmationForm formData={formData}
-           updateFormData={updateFormData} />
+            updateFormData={updateFormData} />
         )}
         <div className="flex justify-between mx-auto p-4 rounded-xl bg-white">
           {(
@@ -118,13 +126,13 @@ const ClientContent = ({ car }: Props) => {
               Back
             </button>
           )}
-          {(currentStep < totalSteps ) && (
+          {(currentStep < totalSteps) && (
             <button type="button" onClick={handleNextStep} className="cursor-pointer btn btn-primary">
               Next
             </button>
-          )} 
-          
-          {(currentStep == totalSteps ) && (
+          )}
+
+          {(currentStep == totalSteps) && (
             <button type="submit" disabled={isPending} className="bg-blue-600 hover:bg-blue-700 text-white p-2 cursor-pointer rounded-md font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
               {isPending ? 'Processing...' : 'Complete Rental'}
             </button>
@@ -140,37 +148,37 @@ const ClientContent = ({ car }: Props) => {
 
 export default ClientContent
 
-const validateBillingForm = (formData: RentalFormData, setFormErrors: React.Dispatch<React.SetStateAction<RentalFormError[]>>) =>{
+const validateBillingForm = (formData: RentalFormData, setFormErrors: React.Dispatch<React.SetStateAction<RentalFormError[]>>) => {
   const newErrors: RentalFormError[] = [];
   if (!formData.name) {
     newErrors.push({ field: 'name', message: 'Name is required' });
   }
-  if(formData.name && formData.name?.length <= 5) {
+  if (formData.name && formData.name?.length <= 5) {
     newErrors.push({ field: 'name', message: 'Name is too short' })
   }
   if (!formData.city) {
     newErrors.push({ field: 'city', message: 'city is required' });
   }
-  if(formData.city && formData.city?.length <= 2) {
+  if (formData.city && formData.city?.length <= 2) {
     newErrors.push({ field: 'city', message: 'city is too short' })
   }
 
   if (!formData.address) {
-    newErrors.push({ field: 'address', message: 'Address is required'});
+    newErrors.push({ field: 'address', message: 'Address is required' });
   }
 
-  if(!formData.zipCode){
-    newErrors.push({ field: 'zipcode', message: 'Zipcode is required'});
+  if (!formData.zipCode) {
+    newErrors.push({ field: 'zipcode', message: 'Zipcode is required' });
   }
 
-  if(formData.zipCode && !/^\d{5}-\d{3}$/.test(formData.zipCode)){
-     newErrors.push({ field: 'zipcode', message: 'Invalid zipcode format (11111-111)' });
-  } 
+  if (formData.zipCode && !/^\d{5}-\d{3}$/.test(formData.zipCode)) {
+    newErrors.push({ field: 'zipcode', message: 'Invalid zipcode format (11111-111)' });
+  }
   setFormErrors(newErrors);
   return newErrors.length === 0;
 }
 
-const validateRentalInfoForm = (formData: RentalFormData, setFormErrors: React.Dispatch<React.SetStateAction<RentalFormError[]>>) =>{
+const validateRentalInfoForm = (formData: RentalFormData, setFormErrors: React.Dispatch<React.SetStateAction<RentalFormError[]>>) => {
   const newErrors: RentalFormError[] = [];
   if (!formData.rentalPickupDate) {
     newErrors.push({ field: 'rentalPickupDate', message: 'Pick up date is required' });
@@ -184,7 +192,7 @@ const validateRentalInfoForm = (formData: RentalFormData, setFormErrors: React.D
   if (!formData.rentalDropoffLocation) {
     newErrors.push({ field: 'rentalDropoffLocation', message: 'Drop off location is required' });
   }
-  
+
   if (formData.rentalPickupDate && formData.rentalDropoffDate) {
     const pickupDate = new Date(formData.rentalPickupDate);
     const dropoffDate = new Date(formData.rentalDropoffDate);
@@ -193,7 +201,7 @@ const validateRentalInfoForm = (formData: RentalFormData, setFormErrors: React.D
     dropoffDate.setHours(0, 0, 0, 0);
 
     const differenceInMilliseconds = dropoffDate.getTime() - pickupDate.getTime();
-    const oneDayInMilliseconds = 24 * 60 * 60 * 1000; 
+    const oneDayInMilliseconds = 24 * 60 * 60 * 1000;
     if (differenceInMilliseconds < oneDayInMilliseconds) {
       newErrors.push({
         field: 'rentalDropoffDate',
@@ -205,3 +213,80 @@ const validateRentalInfoForm = (formData: RentalFormData, setFormErrors: React.D
   return newErrors.length === 0;
 }
 
+const validatePixPaymentForm = (formData: RentalFormData, setFormErrors: React.Dispatch<React.SetStateAction<RentalFormError[]>>) => {
+  const newErrors: RentalFormError[] = [];
+  if (!formData.payerEmail) {
+    newErrors.push({ field: 'payerEmail', message: 'Payer email is required' });
+  }
+  if (!formData.payerFirstName) {
+    newErrors.push({ field: 'payerFirstName', message: 'Payer first name is required' });
+  }
+  if (!formData.payerLastName) {
+    newErrors.push({ field: 'payerLastName', message: 'Payer Last name is required' });
+  }
+
+  if (formData.payerEmail && !isValidEmail(formData.payerEmail)) {
+    newErrors.push({ field: 'payerEmail', message: 'Invalid email format' });
+  }
+
+  if (!formData.payerIdentificationNumber) {
+    newErrors.push({ field: 'payerIdentificationNumber', message: 'CPF is required' });
+  } 
+  
+  if(formData.payerIdentificationNumber){
+    const cleanedCPF = formData.payerIdentificationNumber.replace(/[^\d]/g, ''); 
+
+    if (cleanedCPF.length !== 11) {
+      newErrors.push({ field: 'payerIdentificationNumber', message: 'CPF must have 11 digits' });
+    } else if (!isValidCPF(cleanedCPF)) { 
+      newErrors.push({ field: 'payerIdentificationNumber', message: 'Invalid CPF number' });
+    }
+  }
+
+
+  setFormErrors(newErrors);
+  return newErrors.length === 0;
+}
+
+const isValidEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+const isValidCPF = (cpf: string): boolean => {
+  cpf = cpf.replace(/[^\d]/g, "");
+
+  if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) {
+    return false;
+  }
+
+  let sum = 0;
+  let remainder: number;
+
+  for (let i = 1; i <= 9; i++) {
+    sum = sum + parseInt(cpf.substring(i - 1, i)) * (11 - i);
+  }
+  remainder = (sum * 10) % 11;
+
+  if ((remainder === 10) || (remainder === 11)) {
+    remainder = 0;
+  }
+  if (remainder !== parseInt(cpf.substring(9, 10))) {
+    return false;
+  }
+
+  sum = 0;
+  for (let i = 1; i <= 10; i++) {
+    sum = sum + parseInt(cpf.substring(i - 1, i)) * (12 - i);
+  }
+  remainder = (sum * 10) % 11;
+
+  if ((remainder === 10) || (remainder === 11)) {
+    remainder = 0;
+  }
+  if (remainder !== parseInt(cpf.substring(10, 11))) {
+    return false;
+  }
+
+  return true;
+}

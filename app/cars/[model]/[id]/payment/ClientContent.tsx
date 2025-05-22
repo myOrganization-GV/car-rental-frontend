@@ -82,6 +82,7 @@ const ClientContent = ({ car }: Props) => {
       if(!validatePixPaymentForm(formData, setFormErrors)) return
     }
 
+
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1);
     }
@@ -92,7 +93,7 @@ const ClientContent = ({ car }: Props) => {
       setCurrentStep(currentStep - 1);
     }
   };
-  console.log(formData.token)
+
   return (
     <div className='sm:p-[60px] p-[10px] w-full mx-auto place-items-center gap-8 text-black grid grid-cols-1 lg:grid-cols-2 bg-[#F6F7F9] '>
       <form action={action} className='w-full h-full'>
@@ -129,7 +130,7 @@ const ClientContent = ({ car }: Props) => {
         )}
         {currentStep === 4 && (
           <RentalConfirmationForm formData={formData}
-            updateFormData={updateFormData} />
+            updateFormData={updateFormData} errors={formErrors} />
         )}
         <div className="flex justify-between mx-auto p-4 rounded-b-xl bg-white">
           {(
@@ -258,7 +259,16 @@ const validatePixPaymentForm = (formData: RentalFormData, setFormErrors: React.D
   setFormErrors(newErrors);
   return newErrors.length === 0;
 }
+const validateConfirmationForm = (formData: RentalFormData, setFormErrors: React.Dispatch<React.SetStateAction<RentalFormError[]>>) => {
+  const newErrors: RentalFormError[] = [];
+  if (!formData.terms) {
+    newErrors.push({ field: 'terms', message: 'Please accept our terms' });
+  }
 
+
+  setFormErrors(newErrors);
+  return newErrors.length === 0;
+}
 const isValidEmail = (email: string): boolean => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);

@@ -1,4 +1,5 @@
 import { RentalFormData, UpdateRentalFormData } from '@/types/RentalFormData';
+import { RentalFormError } from '@/types/RentalFormError';
 import Image from 'next/image';
 import React from 'react'
 
@@ -6,12 +7,14 @@ import React from 'react'
 interface Props {
   formData: RentalFormData;
   updateFormData: UpdateRentalFormData;
+  errors: RentalFormError[]
 }
 
 
-const RentalConfirmationForm = ({ formData, updateFormData, }: Props) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    updateFormData({ [e.target.name]: e.target.value });
+const RentalConfirmationForm = ({ formData, updateFormData, errors }: Props) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, type, checked, value } = e.target;
+    updateFormData({ [name]: type === 'checkbox' ? checked : value });
   };
 
   return (
@@ -23,29 +26,10 @@ const RentalConfirmationForm = ({ formData, updateFormData, }: Props) => {
           <span >Step 4 of 4</span>
         </div>
       </div>
-      <div className="flex bg-[#F6F7F9] rounded-md py-2 px-4 items-center">
-        <input
-
-          type="checkbox"
-          id="marketing"
-          name="marketing"
-          className="h-4 w-4 mt-1 text-blue-600 border-gray-300 rounded"
-        />
-        <label htmlFor="marketing" className="ml-2 text-sm  font-semibold">
-          I agree with sending an Marketing and newsletter emails. No spam, promissed!
-        </label>
-      </div>
-      <div className="flex bg-[#F6F7F9] rounded-md py-2 px-4 items-start">
-        <input
-
-          type="checkbox"
-          id="terms"
-          name="terms"
-          className="h-4 bg-white w-4 mt-1 text-blue-600 border-gray-300 rounded"
-        />
-        <label htmlFor="terms" className="ml-2 text-sm  font-semibold">
-          I agree with our terms and conditions and privacy policy.
-        </label>
+      <div className="flex bg-[#F6F7F9] rounded-md justify-center py-2 px-4 items-center">
+          <div>
+            We're really close, remember to review your rental and you are ready to confirm your payment!
+          </div>
       </div>
     </div>
   )

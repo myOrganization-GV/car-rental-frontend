@@ -11,7 +11,7 @@ export async function paymentFormAction(prevState: any, formData: FormData) {
       req: {headers: requestHeaders},
       secret: process.env.AUTH_SECRET 
     });
-
+  console.log(token)
   console.log("Received Combined Form Data:", rawFormData);
   if (rawFormData.paymentMethod === "Credit Card") {
     console.log("Processing Credit Card payment in Server Action...");

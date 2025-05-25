@@ -17,7 +17,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         console.log("Attempting login with:", credentials.email);
 
-        const response = await fetch("http://localhost:8080/auth/login", {
+        const response = await fetch("http://localhost:9090/auth/login", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -44,34 +44,35 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           lastName: data.user.lastName || "",
           email: data.user.email,
           role: data.user.authorities[0].authority,
-          accessToken: data.jwt,
+          idToken: data.jwt
         };
       },
     }),
     Google,
   ],
   callbacks: {
-    async jwt({ token, account, user }: any) {
-
-      
+    async jwt({ token, account, user }:any) {
       if (account) {
         token.provider = account.provider;
         if (account.provider === "google") {
           token.accessToken = account.access_token;
           token.idToken = account.id_token;
         }
+        if(account.provider === "credentials"){
+          token.idToken = user.idToken;
+          token.name = user.firstName;
+        }
         if (user) {
-          token.id = user.id;
+          token.id = user.email;
         }
       }
-
-
       return token;
     },
-    async session({ session, token }: any) {
+    async session({ session, token}:any) {
       session.user = {
         ...session.user,
         provider: token.provider,
+        name: token.name
       };
       return session;
     },

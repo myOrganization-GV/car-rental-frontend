@@ -20,6 +20,16 @@ export const signinFormAction = async (
     }
     return;
   }
+  if (provider === "github") {
+    try {
+      await signIn("github");
+    } catch (error: any) {
+      if (isRedirectError(error)) {
+        throw error;
+      }
+    }
+    return;
+  }
 
   try {
     await signIn("credentials", {

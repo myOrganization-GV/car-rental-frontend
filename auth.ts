@@ -1,6 +1,8 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
+import GitHub from "next-auth/providers/github"
+
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -48,10 +50,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         };
       },
     }),
-    Google,
+    Google, GitHub
   ],
   callbacks: {
     async jwt({ token, account, user }:any) {
+
       if (account) {
         token.provider = account.provider;
         if (account.provider === "google") {
@@ -61,6 +64,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if(account.provider === "credentials"){
           token.idToken = user.idToken;
           token.name = user.firstName;
+        }
+        if(account.provider === "github"){
+          token.idToken = account.access_token;
         }
         if (user) {
           token.id = user.email;

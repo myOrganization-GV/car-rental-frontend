@@ -1,11 +1,12 @@
-'use client'; 
+'use client';
 
 import React, { useState } from 'react';
 
-import { Car } from "@/types/CarType"; 
+import { Car } from "@/types/CarType";
 
-import CarGrid from '@/components/CarGrid'; 
-import MultiRangeSlider, { ChangeResult } from 'multi-range-slider-react'; 
+import CarGrid from '@/components/CarGrid';
+import MultiRangeSlider, { ChangeResult } from 'multi-range-slider-react';
+import { useSession } from "next-auth/react"
 type FilterOption = {
     label: string;
     value: string;
@@ -29,17 +30,16 @@ const rawCapacityOptions: FilterOption[] = [
 ];
 
 interface ClientContentProps {
-    initialCars: Car[]; 
+    initialCars: Car[];
 }
 
 const ClientContent: React.FC<ClientContentProps> = ({ initialCars }) => {
 
     const [cars, setCars] = useState<Car[]>(initialCars);
-
     const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
     const [selectedCaps, setSelectedCaps] = useState<string[]>([]);
-    const [minPrice, setMinPrice] = useState(80); 
-    const [maxPrice, setMaxPrice] = useState(150); 
+    const [minPrice, setMinPrice] = useState(80);
+    const [maxPrice, setMaxPrice] = useState(150);
 
 
     const typeOptions: FilterOption[] = rawTypeOptions.map(opt => ({
@@ -52,8 +52,8 @@ const ClientContent: React.FC<ClientContentProps> = ({ initialCars }) => {
     const capacityOptions: FilterOption[] = rawCapacityOptions.map(opt => {
         const n = parseInt(opt.value, 10);
         const count = opt.value.endsWith('+')
-            ? initialCars.filter(car => car.numberOfSeats >= n).length 
-            : initialCars.filter(car => car.numberOfSeats === n).length; 
+            ? initialCars.filter(car => car.numberOfSeats >= n).length
+            : initialCars.filter(car => car.numberOfSeats === n).length;
         return { ...opt, count };
     });
 
@@ -62,17 +62,17 @@ const ClientContent: React.FC<ClientContentProps> = ({ initialCars }) => {
 
 
     const filteredCars = cars.filter(car =>
-        car.pricePerDay >= minPrice && 
-        car.pricePerDay <= maxPrice && 
+        car.pricePerDay >= minPrice &&
+        car.pricePerDay <= maxPrice &&
         (selectedTypes.length === 0 ||
             selectedTypes.includes(car.category.toLowerCase())
         ) &&
         (selectedCaps.length === 0 ||
             selectedCaps.some(opt => {
                 if (opt.endsWith('+')) {
-                    return car.numberOfSeats >= parseInt(opt, 10); 
+                    return car.numberOfSeats >= parseInt(opt, 10);
                 }
-                return car.numberOfSeats === parseInt(opt, 10); 
+                return car.numberOfSeats === parseInt(opt, 10);
             })
         )
     );
@@ -132,9 +132,9 @@ const ClientContent: React.FC<ClientContentProps> = ({ initialCars }) => {
                         barRightColor="#e5e7eb"
                         thumbLeftColor="#3b82f6"
                         thumbRightColor="#3b82f6"
-                        ruler={false} 
-                        label={false} 
-                        min={80} 
+                        ruler={false}
+                        label={false}
+                        min={80}
                         max={250}
                         step={5}
                         style={{

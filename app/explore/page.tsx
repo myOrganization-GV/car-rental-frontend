@@ -1,5 +1,6 @@
 import { Car } from "@/types/CarType"; 
 import ClientContent from "./ClientContent";
+import { SessionProvider } from "next-auth/react";
 
 async function fetchCars(): Promise<Car[]> {
     try {
@@ -11,7 +12,6 @@ async function fetchCars(): Promise<Car[]> {
         throw new Error(`Failed to fetch cars: ${response.statusText}`);
       }
       const carsData: Car[] = await response.json();
-      console.log("Fetched cars data:", carsData);
       return carsData;
     } catch (error) {
       console.error("Failed to fetch cars:", error);
@@ -31,6 +31,6 @@ export default async function ExplorePage() {
 
   const uniqueModelCars: Car[] = Array.from(uniqueModelsMap.values());
   return (
-    <ClientContent initialCars={uniqueModelCars} />
+       <ClientContent initialCars={uniqueModelCars} />
   );
 }

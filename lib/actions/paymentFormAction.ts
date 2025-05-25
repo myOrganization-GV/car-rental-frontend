@@ -1,15 +1,22 @@
 "use server";
+import { auth } from "@/auth";
 import { RentalFormData } from "@/types/RentalFormData";
+import { getToken } from "next-auth/jwt"
+import { headers } from "next/headers";
 
 export async function paymentFormAction(prevState: any, formData: FormData) {
   const rawFormData = Object.fromEntries(formData.entries()) as RentalFormData;
+  const requestHeaders = await headers();
+  const token = await getToken({ 
+      req: {headers: requestHeaders},
+      secret: process.env.AUTH_SECRET 
+    });
 
   console.log("Received Combined Form Data:", rawFormData);
   if (rawFormData.paymentMethod === "Credit Card") {
     console.log("Processing Credit Card payment in Server Action...");
     try {
       const backendUrl = "http://localhost:9090";
-
       if (!backendUrl) {
         console.error("BACKEND_URL environment variable is not set.");
         return {
@@ -59,6 +66,7 @@ export async function paymentFormAction(prevState: any, formData: FormData) {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${JSON.stringify(token)}`
           },
           body: JSON.stringify(requestBody),
         }
@@ -113,6 +121,10 @@ export async function paymentFormAction(prevState: any, formData: FormData) {
     }
   }
 
+  if (rawFormData.paymentMethod === "Pix") {
+   
+  
+  }
   return {
     message: "Data received on server. Check your server console!",
     errors: null,

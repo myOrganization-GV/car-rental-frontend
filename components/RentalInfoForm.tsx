@@ -1,8 +1,6 @@
 import { RentalFormData, UpdateRentalFormData } from '@/types/RentalFormData';
 import { RentalFormError } from '@/types/RentalFormError';
-import { before } from 'node:test';
-import React, { useState } from 'react'
-import { DayPicker, SelectSingleEventHandler } from "react-day-picker";
+import React from 'react'
 
 
 interface Props {
@@ -16,6 +14,7 @@ const RentalInfoForm = ({ formData, updateFormData, errors }: Props) => {
     const today = new Date();
     const todayISOString = today.toISOString().split('T')[0];
     let minDropoffDate: string | undefined;
+    
     if (formData.rentalPickupDate) {
         const pickupDateObj = new Date(formData.rentalPickupDate + 'T00:00:00'); 
         pickupDateObj.setDate(pickupDateObj.getDate() + 1);
@@ -23,17 +22,9 @@ const RentalInfoForm = ({ formData, updateFormData, errors }: Props) => {
     } else {
         minDropoffDate = todayISOString;
     }
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         updateFormData({ [e.target.name]: e.target.value });
     };
-    const [pickupDate, setPickupDate] = useState<Date | undefined>(
-        formData.rentalPickupDate ? new Date(formData.rentalPickupDate) : undefined
-    );
-    const [dropoffDate, setDropoffDate] = useState<Date | undefined>(
-        formData.rentalDropoffDate ? new Date(formData.rentalDropoffDate) : undefined
-    );
-
     const locations = [
         "New York, NY",
         "Los Angeles, CA",

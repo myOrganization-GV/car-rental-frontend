@@ -18,7 +18,7 @@ const PaymentForm = ({ formData, updateFormData, errors }: Props) => {
     const [scope, animate] = useAnimate();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        updateFormData({ [e.target.name]: e.target.value });
+        updateFormData({ [e.target.name]: e.target.value.trim() });
     };
 
 
@@ -184,7 +184,7 @@ const PaymentForm = ({ formData, updateFormData, errors }: Props) => {
                     <div>
                         <label htmlFor="email" className="block text-sm  mb-1">email</label>
                         <input
-                            type="text"
+                            type="email"
                             id="email"
                             name="payerEmail"
                             className={`w-full font-normal bg-white px-2 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}

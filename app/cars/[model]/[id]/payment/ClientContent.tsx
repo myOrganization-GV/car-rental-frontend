@@ -61,12 +61,12 @@ const ClientContent = ({ car }: Props) => {
     }
 
     if (currentStep === 3 && formData.paymentMethod === "Credit Card") {
+      let token;
       try {
-        const token = await createCardToken({ cardholderName: "Test CardHolder" })
+        token = await createCardToken({cardholderName: formData.name})
         updateFormData({ token: token?.id })
       }catch(error: any){
         if(!Array.isArray(error))return 
-
         const newErrors: RentalFormError[] = [];
         (error as Array<RentalFormError>).forEach(err => {
           newErrors.push({field: err.field, message: err.message})
@@ -74,8 +74,7 @@ const ClientContent = ({ car }: Props) => {
         setFormErrors(newErrors);
         return
       }
-
-      if(!formData.token)return
+      if(!token) return;     
     }
 
     if(formData.paymentMethod === "Pix"){

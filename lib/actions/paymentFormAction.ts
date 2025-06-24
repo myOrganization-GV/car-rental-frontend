@@ -1,19 +1,20 @@
 "use server";
 import { auth } from "@/auth";
 import { RentalFormData } from "@/types/RentalFormData";
-import { getToken } from "next-auth/jwt"
+import { getToken } from "next-auth/jwt";
 import { headers } from "next/headers";
 
 export async function paymentFormAction(prevState: any, formData: FormData) {
   const rawFormData = Object.fromEntries(formData.entries()) as RentalFormData;
   const session = await auth();
   const requestHeaders = await headers();
-  const token = await getToken({ 
-      req: {headers: requestHeaders},
-      secret: process.env.AUTH_SECRET 
-    }) as any;
 
-    console.log(session?.user?.email)
+  const token = (await getToken({
+    req: { headers: requestHeaders },
+    secret: process.env.AUTH_SECRET,
+  })) as any;
+
+  console.log(session?.user?.email);
 
   if (rawFormData.paymentMethod === "Credit Card") {
     console.log("Processing Credit Card payment in Server Action...");
@@ -30,11 +31,8 @@ export async function paymentFormAction(prevState: any, formData: FormData) {
           successForPix: false,
         };
       }
-
-      console.log(
-        `Calling backend API at ${backendUrl}/rent/car with token.`
-      );
-      if (!rawFormData.token) {
+      console.log(`Calling backend API at ${backendUrl}/rent/car with token.`);
+      if (!rawFormData.cardToken) {
         console.error("CardToken not available, something went wrong.");
         return {
           message: "CardToken not available.",
@@ -51,51 +49,46 @@ export async function paymentFormAction(prevState: any, formData: FormData) {
         carId: rawFormData.carId,
         userId: rawFormData.carId,
         paymentDto: {
-          cardToken: rawFormData.token,
+          cardToken: rawFormData.cardToken,
           paymentMethod: "CREDIT_CARD",
           payerEmail: session?.user?.email,
           payerFirstName: rawFormData.name,
           payerIdentificationType: "CPF",
-          payerIdentificationNumber: "11111111111"
-        }
+          payerIdentificationNumber: "11111111111",
+        },
       };
 
-      const cardPaymentResponse = await fetch(
-        `${backendUrl}/rent/car`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "type": "google",
-            "Authorization": `Bearer ${token.idToken}`
-          },
-          body: JSON.stringify(requestBody),
-        }
-      );
-      
+      const cardPaymentResponse = await fetch(`${backendUrl}/rent/car`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          type: "google",
+          Authorization: `Bearer ${token.idToken}`,
+        },
+        body: JSON.stringify(requestBody),
+      });
+
       if (!cardPaymentResponse.ok) {
         console.error(
           "Backend API Error processing card payment:",
-          cardPaymentResponse.status, cardPaymentResponse.statusText
+          cardPaymentResponse.status,
+          cardPaymentResponse.statusText
         );
-        
+
         return {
           message: "Failed to process card payment.",
           errors: {
-            backendError: [
-              cardPaymentResponse.statusText,
-            ],
+            backendError: [cardPaymentResponse.statusText],
           },
           cardPaymentStatus: "failed",
-          cardPaymentError:
-            cardPaymentResponse.statusText,
+          cardPaymentError: cardPaymentResponse.statusText,
           pixData: undefined,
           successForPix: false,
         };
       }
-     const cardPaymentResult = await cardPaymentResponse.json();
-      
-     console.log(
+      const cardPaymentResult = await cardPaymentResponse.json();
+
+      console.log(
         "Card payment processed successfully by backend:",
         cardPaymentResult
       );
@@ -123,8 +116,64 @@ export async function paymentFormAction(prevState: any, formData: FormData) {
   }
 
   if (rawFormData.paymentMethod === "Pix") {
-   
-  
+    console.log("Processing PIX payment in Server Action...");
+    try {
+      const pixRequestBody = {
+        rentalStartDate: `${rawFormData.rentalPickupDate + "T00:00:00"}`,
+        rentalEndDate: `${rawFormData.rentalDropoffDate + "T20:00:00"}`,
+        carId: rawFormData.carId,
+        userId: rawFormData.carId,
+        paymentDto: {
+          paymentMethod: "PIX",
+          payerEmail: session?.user?.email,
+          payerFirstName: rawFormData.name,
+          payerIdentificationType: "CPF",
+          payerIdentificationNumber: rawFormData.payerIdentificationNumber,
+        },
+      };
+
+      const pixPaymentResponse = await fetch(`${process.env.BACKEND_URL}/rent/car`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          type: "google",
+          Authorization: `Bearer ${token.idToken}`,
+        },
+        body: JSON.stringify(pixRequestBody),
+      });
+
+      if (!pixPaymentResponse.ok) {
+        console.error(
+          "Backend API Error processing pix payment:",
+          pixPaymentResponse.status,
+          pixPaymentResponse.statusText
+        );
+
+        return {
+          message: "Failed to process pix payment.",
+          errors: {
+            backendError: [pixPaymentResponse.statusText],
+          },
+          cardPaymentStatus: "failed",
+          cardPaymentError: pixPaymentResponse.statusText,
+          pixData: undefined,
+          successForPix: false,
+        };
+      }
+
+
+      
+    } catch (error: any) {
+      console.error("Error calling backend API for card payment:", error);
+      return {
+        message: "An error occurred while processing card payment.",
+        errors: { fetchError: [error.message || "Unknown fetch error"] },
+        cardPaymentStatus: "failed",
+        cardPaymentError: error.message || "Unknown fetch error",
+        pixData: undefined,
+        successForPix: false,
+      };
+    }
   }
   return {
     message: "Data received on server. Check your server console!",

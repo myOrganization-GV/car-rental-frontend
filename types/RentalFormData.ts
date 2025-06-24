@@ -17,10 +17,7 @@ export interface RentalFormData {
     rentalDropoffDate?: string;
     // Step 3: PaymentForm fields
     paymentMethod?: string; 
-    cardNumber?: string;
-    cardExpiry?: string; 
-    cardCVC?: string;
-    token?: string;
+    cardToken?: string;
 
     //pix payer field
     payerFirstName?: string;

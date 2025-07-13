@@ -18,7 +18,7 @@ const PaymentForm = ({ formData, updateFormData, errors }: Props) => {
     const [scope, animate] = useAnimate();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        updateFormData({ [e.target.name]: e.target.value.trim() });
+        updateFormData({ [e.target.name]: e.target.value });
     };
 
 

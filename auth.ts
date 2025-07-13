@@ -66,6 +66,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           token.name = user.firstName;
         }
         if(account.provider === "github"){
+          console.log(token);
+          console.log(account);
           token.idToken = account.access_token;
         }
         if (user) {

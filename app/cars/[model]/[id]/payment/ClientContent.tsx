@@ -64,7 +64,7 @@ const ClientContent = ({ car }: Props) => {
       let token;
       try {
         token = await createCardToken({cardholderName: formData.name})
-        updateFormData({ token: token?.id })
+        updateFormData({ cardToken: token?.id })
       }catch(error: any){
         if(!Array.isArray(error))return 
         const newErrors: RentalFormError[] = [];

@@ -14,12 +14,10 @@ export async function paymentFormAction(prevState: any, formData: FormData) {
     secret: process.env.AUTH_SECRET,
   })) as any;
 
-  console.log(session?.user?.email);
-
   if (rawFormData.paymentMethod === "Credit Card") {
     console.log("Processing Credit Card payment in Server Action...");
     try {
-      const backendUrl = "http://localhost:8080";
+      const backendUrl = process.env.BACKEND_URL;
       if (!backendUrl) {
         console.error("BACKEND_URL environment variable is not set.");
         return {
@@ -51,10 +49,10 @@ export async function paymentFormAction(prevState: any, formData: FormData) {
         paymentDto: {
           cardToken: rawFormData.cardToken,
           paymentMethod: "CREDIT_CARD",
-          payerEmail: session?.user?.email,
-          payerFirstName: rawFormData.name,
+          payerEmail: session?.user?.email?.trim(),
+          payerFirstName: rawFormData.name?.trim(),
           payerIdentificationType: "CPF",
-          payerIdentificationNumber: "11111111111",
+          payerIdentificationNumber: "16940233709",
         },
       };
 
@@ -62,7 +60,7 @@ export async function paymentFormAction(prevState: any, formData: FormData) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          type: "google",
+          type: "github",
           Authorization: `Bearer ${token.idToken}`,
         },
         body: JSON.stringify(requestBody),
@@ -125,8 +123,8 @@ export async function paymentFormAction(prevState: any, formData: FormData) {
         userId: rawFormData.carId,
         paymentDto: {
           paymentMethod: "PIX",
-          payerEmail: session?.user?.email,
-          payerFirstName: rawFormData.name,
+          payerEmail: session?.user?.email?.trim(),
+          payerFirstName: rawFormData.name?.trim(),
           payerIdentificationType: "CPF",
           payerIdentificationNumber: rawFormData.payerIdentificationNumber,
         },

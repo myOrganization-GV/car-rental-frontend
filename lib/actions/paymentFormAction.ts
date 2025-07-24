@@ -13,7 +13,7 @@ export async function paymentFormAction(prevState: any, formData: FormData) {
     req: { headers: requestHeaders },
     secret: process.env.AUTH_SECRET,
   })) as any;
-
+  console.log(token)
   if (rawFormData.paymentMethod === "Credit Card") {
     console.log("Processing Credit Card payment in Server Action...");
     try {
@@ -52,7 +52,7 @@ export async function paymentFormAction(prevState: any, formData: FormData) {
           payerEmail: session?.user?.email?.trim(),
           payerFirstName: rawFormData.name?.trim(),
           payerIdentificationType: "CPF",
-          payerIdentificationNumber: "16940233709",
+          payerIdentificationNumber: "12345678909",
         },
       };
 
@@ -60,7 +60,7 @@ export async function paymentFormAction(prevState: any, formData: FormData) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          type: "github",
+          type: token.provider,
           Authorization: `Bearer ${token.idToken}`,
         },
         body: JSON.stringify(requestBody),
@@ -134,7 +134,7 @@ export async function paymentFormAction(prevState: any, formData: FormData) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          type: "google",
+          type: token.provider,
           Authorization: `Bearer ${token.idToken}`,
         },
         body: JSON.stringify(pixRequestBody),
@@ -158,8 +158,15 @@ export async function paymentFormAction(prevState: any, formData: FormData) {
           successForPix: false,
         };
       }
+      
+      const pixPaymentResult = await pixPaymentResponse.json();
+      const sagaId = pixPaymentResult.sagaId;
 
-
+       return {
+        message: "PIX payment initiated successfully. Waiting for details.",
+        sagaId: sagaId, 
+        paymentMethod: rawFormData.paymentMethod
+      };
       
     } catch (error: any) {
       console.error("Error calling backend API for card payment:", error);
@@ -175,6 +182,5 @@ export async function paymentFormAction(prevState: any, formData: FormData) {
   }
   return {
     message: "Data received on server. Check your server console!",
-    errors: null,
   };
 }

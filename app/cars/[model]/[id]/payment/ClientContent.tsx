@@ -1,7 +1,9 @@
 "use client"
 import BillingForm from '@/components/BillingForm';
-import CarNotFound from '@/components/CarNotFound';
 import PaymentForm from '@/components/PaymentForm';
+import { getPixDetails } from '@/components/PixDetailsData';
+import PixLinkDisplay from '@/components/PixLinkDisplay';
+import PixQRCodeImage from '@/components/PixQRCodeImage';
 import RentalConfirmationForm from '@/components/RentalConfirmationForm';
 import RentalInfoForm from '@/components/RentalInfoForm';
 import RentalSummary from '@/components/RentalSummary';
@@ -11,7 +13,7 @@ import { RentalFormData } from '@/types/RentalFormData';
 import { RentalFormError } from '@/types/RentalFormError';
 import { createCardToken } from '@mercadopago/sdk-react';
 
-import React, { useActionState, useState } from 'react'
+import React, { useActionState, useEffect, useRef, useState } from 'react'
 
 interface Props {
   car: Car
@@ -32,19 +34,76 @@ const ClientContent = ({ car }: Props) => {
   const [state, action, isPending] = useActionState(paymentFormAction, undefined);
   const [formErrors, setFormErrors] = useState<RentalFormError[]>([]);
   const [currentStep, setCurrentStep] = useState(1);
+  const [isLoadingPixDetails, setIsLoadingPixDetails] = useState(false);
+  const [pixError, setPixError] = useState<string | null>(null);
+
+  const [pixPaymentDetails, setPixPaymentDetails] = useState<{
+
+    qrCodeBase64: string;
+
+    qrCode: string;
+
+    sagaId: string;
+
+  } | null>(null);
+
 
   const [formData, setFormData] = useState<RentalFormData>({
     carId: car?.carId.toString(),
     carModel: car?.model,
   });
 
+  useEffect(() => {
+    if (!state?.sagaId) return
+    let isCancelled = false;
+    const maxAttempts = 6;
+    let attempts = 0;
+
+    const pollPixDetails = async () => {
+      setIsLoadingPixDetails(true)
+      while (attempts < maxAttempts && !isCancelled) {
+        try {
+          console.log(`Attempt at fetching pix details: ${attempts + 1}`)
+          setIsLoadingPixDetails(true);
+          const result = await getPixDetails(state.sagaId);
+
+          if (result.data) {
+            setPixPaymentDetails({
+              qrCodeBase64: result.data.qrCodeBase64,
+              qrCode: result.data.qrCode,
+              sagaId: result.data.sagaId,
+            });
+            setIsLoadingPixDetails(false)
+            return;
+          }
+        } catch (error) {
+          console.error("Polling error:", error);
+          setPixError("Failed to fetch PIX details");
+        }
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        attempts++;
+      }
+      if (!isCancelled && attempts >= maxAttempts) {
+        console.log("Timeout")
+        setPixError("Timeout: Unable to fetch PIX details after 30 seconds.");
+      }
+
+      setIsLoadingPixDetails(false);
+    };
+
+    pollPixDetails();
+    return () => {
+      isCancelled = true;
+    };
+  }, [state]);
+
+
   const updateFormData = (data: any) => {
     setFormData(prevData => ({ ...prevData, ...data }));
   };
 
-
-
   const handleNextStep = async () => {
+
     if (currentStep === 1) {
       if (!validateBillingForm(formData, setFormErrors)) {
         return
@@ -56,29 +115,30 @@ const ClientContent = ({ car }: Props) => {
       }
     }
 
-    if (currentStep === 3) {
-      if(!formData.paymentMethod) return
+    if (currentStep === 3 && !formData.paymentMethod) {
+      return
     }
 
     if (currentStep === 3 && formData.paymentMethod === "Credit Card") {
       let token;
       try {
-        token = await createCardToken({cardholderName: formData.name})
+        token = await createCardToken({ cardholderName: formData.name })
         updateFormData({ cardToken: token?.id })
-      }catch(error: any){
-        if(!Array.isArray(error))return 
+        console.log(token)
+      } catch (error: any) {
+        if (!Array.isArray(error)) return
         const newErrors: RentalFormError[] = [];
         (error as Array<RentalFormError>).forEach(err => {
-          newErrors.push({field: err.field, message: err.message})
+          newErrors.push({ field: err.field, message: err.message })
         })
         setFormErrors(newErrors);
         return
       }
-      if(!token) return;     
+      if (!token) return;
     }
 
-    if(formData.paymentMethod === "Pix"){
-      if(!validatePixPaymentForm(formData, setFormErrors)) return
+    if (formData.paymentMethod === "Pix") {
+      if (!validatePixPaymentForm(formData, setFormErrors)) return
     }
 
 
@@ -133,7 +193,7 @@ const ClientContent = ({ car }: Props) => {
         )}
         <div className="flex justify-between mx-auto p-4 rounded-b-xl bg-white">
           {(
-            <button disabled={currentStep <= 1} type="button" onClick={handlePrevStep} className="btn  cursor-pointer p-2 font-semibold">
+            <button disabled={currentStep <= 1} type="button" onClick={handlePrevStep} className="btn cursor-pointer p-2 font-semibold">
               Back
             </button>
           )}
@@ -144,12 +204,16 @@ const ClientContent = ({ car }: Props) => {
           )}
 
           {(currentStep == totalSteps) && (
-            <button type="submit" disabled={isPending} className="bg-blue-600 hover:bg-blue-700 text-white p-2 cursor-pointer rounded-md font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-              {isPending ? 'Processing...' : 'Complete Rental'}
+            <button type="submit" disabled={(isPending || isLoadingPixDetails)} className="bg-blue-600 hover:bg-blue-700 text-white p-2 cursor-pointer rounded-md font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+              {(isPending || isLoadingPixDetails) ? 'Processing...' : 'Complete Rental'}
             </button>
           )}
         </div>
       </form>
+      {pixPaymentDetails && <div className='w-full h-full p-4 bg-white rounded-xl'>
+        <PixQRCodeImage base64={pixPaymentDetails.qrCodeBase64} />
+        <PixLinkDisplay qrCode={pixPaymentDetails.qrCode} />
+      </div>}
       <div className='w-full h-full rounded-xl bg-white'>
         <RentalSummary car={car} formData={formData} />
       </div>
@@ -242,14 +306,14 @@ const validatePixPaymentForm = (formData: RentalFormData, setFormErrors: React.D
 
   if (!formData.payerIdentificationNumber) {
     newErrors.push({ field: 'payerIdentificationNumber', message: 'CPF is required' });
-  } 
-  
-  if(formData.payerIdentificationNumber){
-    const cleanedCPF = formData.payerIdentificationNumber.replace(/[^\d]/g, ''); 
+  }
+
+  if (formData.payerIdentificationNumber) {
+    const cleanedCPF = formData.payerIdentificationNumber.replace(/[^\d]/g, '');
 
     if (cleanedCPF.length !== 11) {
       newErrors.push({ field: 'payerIdentificationNumber', message: 'CPF must have 11 digits' });
-    } else if (!isValidCPF(cleanedCPF)) { 
+    } else if (!isValidCPF(cleanedCPF)) {
       newErrors.push({ field: 'payerIdentificationNumber', message: 'Invalid CPF number' });
     }
   }

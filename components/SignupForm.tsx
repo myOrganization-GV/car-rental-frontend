@@ -140,22 +140,7 @@ const SignupForm = () => {
                 </div>
 
             </div>
-            <div className='col-span-2 mt-3 text-center mx-auto font-semibold text-black'>Or continue with your socials</div>
-            <div className="flex mt-3 items-center col-span-2 justify-center">
-                <button className="flex cursor-pointer mx-auto items-center bg-white  border border-gray-300 rounded-lg shadow-md px-6 py-2 text-sm font-medium text-black  hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                    <GoogleSvg />
-                    <span>Continue with Google</span>
-                </button>
-
-            </div>
-            <div className="flex mt-3 items-center col-span-2 justify-center">
-                <button type='button' className="flex cursor-pointer mx-auto items-center bg-white  border border-gray-300 rounded-lg shadow-md px-6 py-2 text-sm font-medium text-black  hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                    <GithubSvg />
-                    <span>Continue with Github</span>
-                </button>
-            </div>
         </form>
-
     )
 }
 

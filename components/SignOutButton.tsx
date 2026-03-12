@@ -8,7 +8,7 @@ export const SignOutButton = () => {
       onClick={() =>
         signOut({ callbackUrl: "/" })
       }
-      className="w-full text-left px-4 py-2"
+      className="w-full text-left py-2"
     >
       Logout
     </button>

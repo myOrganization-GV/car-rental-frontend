@@ -7,11 +7,13 @@ import PixQRCodeImage from '@/components/PixQRCodeImage';
 import RentalConfirmationForm from '@/components/RentalConfirmationForm';
 import RentalInfoForm from '@/components/RentalInfoForm';
 import RentalSummary from '@/components/RentalSummary';
+import { defaultRentalFormData } from '@/constants/InitialRentFormData';
 import { paymentFormAction } from '@/lib/actions/paymentFormAction';
 import { Car } from '@/types/CarType';
 import { RentalFormData } from '@/types/RentalFormData';
 import { RentalFormError } from '@/types/RentalFormError';
 import { createCardToken } from '@mercadopago/sdk-react';
+import { useRouter } from 'next/navigation';
 
 import React, { useActionState, useEffect, useRef, useState } from 'react'
 
@@ -36,21 +38,30 @@ const ClientContent = ({ car }: Props) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoadingPixDetails, setIsLoadingPixDetails] = useState(false);
   const [pixError, setPixError] = useState<string | null>(null);
-
   const [pixPaymentDetails, setPixPaymentDetails] = useState<{
-
     qrCodeBase64: string;
-
     qrCode: string;
-
     sagaId: string;
-
   } | null>(null);
 
+  const router = useRouter();
+  const [redirectCount, setRedirectCount] = useState(5);
+  const hasSubmitted = !!state?.sagaId || (state && !state?.errors && currentStep === totalSteps);
+
+
+  useEffect(() => {
+    if (!hasSubmitted) return;
+    if (redirectCount <= 0) {
+      router.push('/');
+      return;
+    }
+    const timer = setTimeout(() => setRedirectCount(prev => prev - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [hasSubmitted, redirectCount, router]);
 
   const [formData, setFormData] = useState<RentalFormData>({
     carId: car?.carId.toString(),
-    carModel: car?.model,
+    carModel: car?.model, ...defaultRentalFormData
   });
 
   useEffect(() => {
@@ -84,7 +95,7 @@ const ClientContent = ({ car }: Props) => {
         attempts++;
       }
       if (!isCancelled && attempts >= maxAttempts) {
-        console.log("Timeout")
+
         setPixError("Timeout: Unable to fetch PIX details after 30 seconds.");
       }
 
@@ -124,7 +135,6 @@ const ClientContent = ({ car }: Props) => {
       try {
         token = await createCardToken({ cardholderName: formData.name })
         updateFormData({ cardToken: token?.id })
-        console.log(token)
       } catch (error: any) {
         if (!Array.isArray(error)) return
         const newErrors: RentalFormError[] = [];
@@ -155,7 +165,7 @@ const ClientContent = ({ car }: Props) => {
 
   return (
     <div className='sm:p-[60px] p-[10px] w-full mx-auto place-items-center gap-8 text-black grid grid-cols-1 lg:grid-cols-2 bg-[#F6F7F9] '>
-      <form action={action} className='w-full h-full'>
+      {!pixPaymentDetails && <form action={action} className='w-full h-full'>
         {Object.entries(formData).map(([key, value]) => (
           value !== undefined && value !== null && (
             <input
@@ -189,28 +199,48 @@ const ClientContent = ({ car }: Props) => {
         )}
         {currentStep === 4 && (
           <RentalConfirmationForm formData={formData}
-            updateFormData={updateFormData} errors={formErrors} />
+            updateFormData={updateFormData} errors={formErrors}
+            isPending={isPending}
+            state={state} />
         )}
         <div className="flex justify-between mx-auto p-4 rounded-b-xl bg-white">
-          {(
-            <button disabled={currentStep <= 1} type="button" onClick={handlePrevStep} className="btn cursor-pointer p-2 font-semibold">
+          {!hasSubmitted && (
+            <button
+              disabled={currentStep <= 1 || isPending || isLoadingPixDetails}
+              type="button"
+              onClick={handlePrevStep}
+              className="btn cursor-pointer p-2 font-semibold disabled:opacity-30"
+            >
               Back
             </button>
           )}
-          {(currentStep < totalSteps) && (
+
+          {!hasSubmitted && currentStep < totalSteps && (
             <button type="button" onClick={handleNextStep} className="cursor-pointer btn btn-primary">
               Next
             </button>
           )}
 
-          {(currentStep == totalSteps) && (
-            <button type="submit" disabled={(isPending || isLoadingPixDetails)} className="bg-blue-600 hover:bg-blue-700 text-white p-2 cursor-pointer rounded-md font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-              {(isPending || isLoadingPixDetails) ? 'Processing...' : 'Complete Rental'}
+          {!hasSubmitted && currentStep === totalSteps && (
+            <button
+              type="submit"
+              disabled={isPending || isLoadingPixDetails}
+              className="bg-blue-600 hover:bg-blue-700 text-white p-2 cursor-pointer rounded-md font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isPending || isLoadingPixDetails ? 'Processing...' : 'Complete Rental'}
             </button>
           )}
+
+          {hasSubmitted && (
+            <div className="w-full flex items-center justify-center gap-2 text-[14px] text-[#90A3BF]">
+              <div className="w-4 h-4 border-2 border-blue-400 border-t-transparent rounded-full animate-spin" />
+              Redirecting you to the home page in
+              <span className="font-bold text-blue-600">{redirectCount}s</span>
+            </div>
+          )}
         </div>
-      </form>
-      {pixPaymentDetails && <div className='w-full h-full p-4 bg-white rounded-xl'>
+      </form>}
+      {pixPaymentDetails && <div className='  w-full h-full p-4 bg-white rounded-xl'>
         <PixQRCodeImage base64={pixPaymentDetails.qrCodeBase64} />
         <PixLinkDisplay qrCode={pixPaymentDetails.qrCode} />
       </div>}

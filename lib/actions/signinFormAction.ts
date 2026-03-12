@@ -10,6 +10,7 @@ export const signinFormAction = async (
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const provider = formData.get("provider") as string;
+  console.log(provider)
   if (provider === "google") {
     try {
       await signIn("google");
@@ -31,17 +32,19 @@ export const signinFormAction = async (
     return;
   }
 
-  try {
-    await signIn("credentials", {
-      email,
-      password,
-      redirectTo: "/",
-    });
-  } catch (error: any) {
-    if (isRedirectError(error)) {
-      throw error;
+  if (provider === "custom") {
+    try {
+      await signIn("credentials", {
+        email,
+        password,
+        redirectTo: "/",
+      });
+    } catch (error: any) {
+      if (isRedirectError(error)) {
+        throw error;
+      }
+      if (error.type == "CredentialsSignin") return { type: "credentials" };
+      return { type: "server" };
     }
-    if (error.type == "CredentialsSignin") return { type: "credentials" };
-    return { type: "server" };
   }
 };

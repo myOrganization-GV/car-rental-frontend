@@ -13,7 +13,7 @@ interface GetPixDetailsResult {
 }
 
 export async function getPixDetails(sagaId: string): Promise<GetPixDetailsResult> { 
-    const backendUrl = "http://localhost:8085";
+    const backendUrl = process.env.BACKEND_URL;
 
     if (!sagaId) {
         console.error("SagaId is missing for PIX details fetch.");

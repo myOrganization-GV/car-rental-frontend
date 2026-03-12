@@ -34,8 +34,10 @@ export const signupFormAction = async (previousState: unknown, formData: FormDat
     }
   }
   const { firstName, lastName, email, password } = result.data;
+  const backendUrl = process.env.BACKEND_URL;
   try {
-    const response = await fetch("http://localhost:8080/auth/register", {
+
+    const response = await fetch(`${backendUrl}/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

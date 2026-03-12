@@ -15,7 +15,7 @@ const PixLinkDisplay = ({ qrCode }: { qrCode: string }) => {
   };
 
 return (
-  <div className="relative flex items-center bg-[#F6F7F9] rounded-md px-4 py-2">
+  <div className="relative  w-full flex items-center bg-[#F6F7F9] rounded-md px-4 py-2">
     <span
       className="truncate text-black pr-20"
       title={qrCode}

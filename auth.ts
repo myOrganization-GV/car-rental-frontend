@@ -18,8 +18,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
 
         console.log("Attempting login with:", credentials.email);
-
-        const response = await fetch("http://localhost:9090/auth/login", {
+        const backendUrl = process.env.BACKEND_URL;
+        const response = await fetch(`${backendUrl}/auth/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

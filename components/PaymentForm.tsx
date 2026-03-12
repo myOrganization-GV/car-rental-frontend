@@ -69,7 +69,7 @@ const PaymentForm = ({ formData, updateFormData, errors }: Props) => {
 
 
     return (
-        <div ref={scope} className='mx-auto overflow-y-scroll h-[635px] rounded-t-xl font-semibold text-black bg-white p-4'>
+        <div ref={scope} className='mx-auto overflow-y-scroll  rounded-t-xl font-semibold text-black bg-white p-4'>
             <div className='mb-5'>
                 <h2 className='font-bold text-[20px]'>Rental Info</h2>
                 <div className='flex font-semibold text-[14px] text-[#90A3BF] justify-between'>
@@ -98,24 +98,36 @@ const PaymentForm = ({ formData, updateFormData, errors }: Props) => {
                         <Image className='object-contain' fill alt='credit logo' src='/assets/Visa.png' />
                     </div>
                 </div>
-                <div className='flex flex-col gap-4'>
-                    <div>Card Number</div>
+                <div className='relative flex flex-col gap-4'>
+
+                    <div>Card Number - <span className="text-gray-600 ">
+                            4235 6477 2802 5682
+                        </span></div>
                     <CardNumber placeholder='Card Number' style={cardStyle} />
+                    {
+                        
+                    }
                     {errors.find(error => error.field === "cardNumber") && <p className="text-red-600">{errors.find(error => error.field === 'cardNumber')?.message}</p>}
                 </div>
                 <div className='flex flex-col gap-4'>
-                    <div>Expiration Date</div>
-                    <ExpirationDate placeholder='mm-yy' style={cardStyle} />
-                    {errors.find(error => error.field === "expirationDate" ||  error.field === "expirationMonth" || error.field === "expirationYear") && <p className="text-red-600">{errors.find(error => error.field === "expirationDate" ||  error.field === "expirationMonth" || error.field === "expirationYear")?.message}</p>}
+                    <div>Expiration Date -  <span className="text-gray-600 ">
+                            11/30
+                        </span></div>
+
+                    <ExpirationDate placeholder='mm/yy' style={cardStyle} />
+
+                    {errors.find(error => error.field === "expirationDate" || error.field === "expirationMonth" || error.field === "expirationYear") && <p className="text-red-600">{errors.find(error => error.field === "expirationDate" || error.field === "expirationMonth" || error.field === "expirationYear")?.message}</p>}
                 </div>
                 <div className='flex flex-col gap-4'>
-                    <div>CVV</div>
+                    <div>CVV - <span className="text-gray-600 ">
+                            123
+                        </span></div>
                     <SecurityCode placeholder='CVV' style={cardStyle} />
                     {errors.find(error => error.field === "securityCode") && <p className="text-red-600">{errors.find(error => error.field === 'securityCode')?.message}</p>}
                 </div>
 
             </div>
-            <div className='paypal-panel h-[70px] items-center mb-5 rounded-xl p-4 bg-[#F6F7F9] justify-between flex col-span-2'>
+{/*             <div className='paypal-panel h-[70px] items-center mb-5 rounded-xl p-4 bg-[#F6F7F9] justify-between flex col-span-2'>
                 <div className='flex items-center'>
                     <input
                         type="radio"
@@ -136,7 +148,7 @@ const PaymentForm = ({ formData, updateFormData, errors }: Props) => {
                 <div className='relative w-20 h-8'>
                     <Image className='object-contain' fill alt='credit logo' src='/assets/PayPal.png' />
                 </div>
-            </div>
+            </div> */}
             <div className='overflow-y-hidden pix-panel h-[70px] items-center mb-5 p-5 gap-5 rounded-xl bg-[#F6F7F9] justify-between flex-wrap flex col-span-2'>
                 <div className='flex'>
                     <input
@@ -209,7 +221,7 @@ const PaymentForm = ({ formData, updateFormData, errors }: Props) => {
                     </div>
                 </div>
             </div>
-            <div className='bitcoin-panel h-[70px] items-center p-4 rounded-xl bg-[#F6F7F9] justify-between flex col-span-2'>
+{/*             <div className='bitcoin-panel h-[70px] items-center p-4 rounded-xl bg-[#F6F7F9] justify-between flex col-span-2'>
                 <div className='flex items-center'>
                     <input
                         type="radio"
@@ -230,7 +242,7 @@ const PaymentForm = ({ formData, updateFormData, errors }: Props) => {
                 <div className='relative w-20 h-8'>
                     <Image className='object-contain' fill alt='credit logo' src='/assets/Bitcoin.png' />
                 </div>
-            </div>
+            </div> */}
         </div>
     )
 }

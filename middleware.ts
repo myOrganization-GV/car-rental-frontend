@@ -6,6 +6,10 @@ export default auth(async (req)=> {
     const {nextUrl} = req;
     const baseUrl = process.env.BASE_URL as string
 
+    if (nextUrl.pathname.startsWith("/api/auth")) {
+        return;
+    }
+
     const isPrivateRoute = privateRoutes.some(route => nextUrl.pathname.startsWith(route));
     console.log(nextUrl.pathname)
     const isAuthPage = ["/signin", "/signup"].some(el => nextUrl.pathname.includes(el))
@@ -20,5 +24,5 @@ export default auth(async (req)=> {
 })
 
 export const config ={
-    matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/","/(api|trpc)(.*)"],
+    matcher: ["/((?!api|trpc|_next|.+\\.[\\w]+$).*)", "/"],
 }

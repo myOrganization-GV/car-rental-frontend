@@ -2,9 +2,7 @@ import React from 'react'
 import GithubSvg from './GithubSvg'
 import GoogleSvg from './GoogleSvg'
 
-type Props = {}
-
-const SocialLogins = (props: Props) => {
+const SocialLogins = () => {
     return (<>
         <hr className=' col-span-2' />
         <div className='col-span-2 mx-auto font-semibold text-black'>Or continue with your socials</div>

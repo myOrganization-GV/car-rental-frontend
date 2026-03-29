@@ -3,8 +3,17 @@
 import { signIn } from "@/auth";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 
+const isCredentialsSigninError = (error: unknown): error is { type: string } => {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "type" in error &&
+    typeof error.type === "string"
+  );
+};
+
 export const signinFormAction = async (
-  previousState: unknown,
+  _previousState: unknown,
   formData: FormData
 ) => {
   const email = formData.get("email") as string;
@@ -14,7 +23,7 @@ export const signinFormAction = async (
   if (provider === "google") {
     try {
       await signIn("google");
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (isRedirectError(error)) {
         throw error;
       }
@@ -24,7 +33,7 @@ export const signinFormAction = async (
   if (provider === "github") {
     try {
       await signIn("github");
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (isRedirectError(error)) {
         throw error;
       }
@@ -39,11 +48,11 @@ export const signinFormAction = async (
         password,
         redirectTo: "/",
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (isRedirectError(error)) {
         throw error;
       }
-      if (error.type == "CredentialsSignin") return { type: "credentials" };
+      if (isCredentialsSigninError(error) && error.type === "CredentialsSignin") return { type: "credentials" };
       return { type: "server" };
     }
   }

@@ -1,6 +1,5 @@
 import { Car } from "@/types/CarType"; 
 import ClientContent from "./ClientContent";
-import { SessionProvider } from "next-auth/react";
 
 async function fetchCars(): Promise<Car[]> {
     try {

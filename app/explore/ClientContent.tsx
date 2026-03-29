@@ -6,7 +6,6 @@ import { Car } from "@/types/CarType";
 
 import CarGrid from '@/components/CarGrid';
 import MultiRangeSlider, { ChangeResult } from 'multi-range-slider-react';
-import { useSession } from "next-auth/react"
 type FilterOption = {
     label: string;
     value: string;
@@ -34,8 +33,7 @@ interface ClientContentProps {
 }
 
 const ClientContent: React.FC<ClientContentProps> = ({ initialCars }) => {
-
-    const [cars, setCars] = useState<Car[]>(initialCars);
+    const cars = initialCars;
     const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
     const [selectedCaps, setSelectedCaps] = useState<string[]>([]);
     const [minPrice, setMinPrice] = useState(80);

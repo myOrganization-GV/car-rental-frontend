@@ -4,7 +4,16 @@ import { RentalFormData } from "@/types/RentalFormData";
 import { getToken } from "next-auth/jwt";
 import { headers } from "next/headers";
 
-export async function paymentFormAction(prevState: any, formData: FormData) {
+type AuthToken = {
+  provider?: string;
+  idToken?: string;
+};
+
+const getErrorMessage = (error: unknown): string => {
+  return error instanceof Error ? error.message : "Unknown fetch error";
+};
+
+export async function paymentFormAction(_prevState: unknown, formData: FormData) {
   const rawFormData = Object.fromEntries(formData.entries()) as RentalFormData;
   const session = await auth();
   const requestHeaders = await headers();
@@ -12,7 +21,7 @@ export async function paymentFormAction(prevState: any, formData: FormData) {
   const token = (await getToken({
     req: { headers: requestHeaders },
     secret: process.env.AUTH_SECRET,
-  })) as any;
+  })) as AuthToken | null;
   console.log(token)
   if (rawFormData.paymentMethod === "Credit Card") {
     console.log("Processing Credit Card payment in Server Action...");
@@ -60,8 +69,8 @@ export async function paymentFormAction(prevState: any, formData: FormData) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          type: token.provider,
-          Authorization: `Bearer ${token.idToken}`,
+          type: token?.provider ?? "",
+          Authorization: `Bearer ${token?.idToken ?? ""}`,
         },
         body: JSON.stringify(requestBody),
       });
@@ -100,13 +109,13 @@ export async function paymentFormAction(prevState: any, formData: FormData) {
         pixData: undefined,
         successForPix: false,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error calling backend API for card payment:", error);
       return {
         message: "An error occurred while processing card payment.",
-        errors: { fetchError: [error.message || "Unknown fetch error"] },
+        errors: { fetchError: [getErrorMessage(error)] },
         cardPaymentStatus: "failed",
-        cardPaymentError: error.message || "Unknown fetch error",
+        cardPaymentError: getErrorMessage(error),
         pixData: undefined,
         successForPix: false,
       };
@@ -134,8 +143,8 @@ export async function paymentFormAction(prevState: any, formData: FormData) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          type: token.provider,
-          Authorization: `Bearer ${token.idToken}`,
+          type: token?.provider ?? "",
+          Authorization: `Bearer ${token?.idToken ?? ""}`,
         },
         body: JSON.stringify(pixRequestBody),
       });
@@ -168,13 +177,13 @@ export async function paymentFormAction(prevState: any, formData: FormData) {
         paymentMethod: rawFormData.paymentMethod
       };
       
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error calling backend API for card payment:", error);
       return {
         message: "An error occurred while processing card payment.",
-        errors: { fetchError: [error.message || "Unknown fetch error"] },
+        errors: { fetchError: [getErrorMessage(error)] },
         cardPaymentStatus: "failed",
-        cardPaymentError: error.message || "Unknown fetch error",
+        cardPaymentError: getErrorMessage(error),
         pixData: undefined,
         successForPix: false,
       };

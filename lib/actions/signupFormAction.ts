@@ -2,6 +2,10 @@
 
 import { z } from "zod";
 
+const getErrorMessage = (error: unknown): string => {
+  return error instanceof Error ? error.message : "An unexpected error occurred during registration.";
+};
+
 const signupSchema = z
   .object({
     firstName: z.string().nonempty("First name is required"),
@@ -22,7 +26,7 @@ const signupSchema = z
     path: ["confirmPassword"],
   });
 
-export const signupFormAction = async (previousState: unknown, formData: FormData) => {
+export const signupFormAction = async (_previousState: unknown, formData: FormData) => {
   const formValues = Object.fromEntries(formData.entries());
   const result = signupSchema.safeParse(formValues);
   if(!result.success){
@@ -57,8 +61,8 @@ export const signupFormAction = async (previousState: unknown, formData: FormDat
       const errorData = await response.json();
       return { error: errorData?.message || "Registration failed." };
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error during registration:", error);
-    return { error: "An unexpected error occurred during registration." }; 
+    return { error: getErrorMessage(error) }; 
   }
 };

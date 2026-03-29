@@ -1,8 +1,8 @@
 "use client"
 import { Car } from '@/types/CarType'
 import Image from 'next/image'
-import { motion, easeInOut, useAnimate } from 'motion/react'
-import React, { useRef, useState } from 'react'
+import { motion, easeInOut } from 'motion/react'
+import React, { useState } from 'react'
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from 'react-icons/fa'
 
 type Props = {
@@ -27,7 +27,7 @@ const CarImageDisplay = ({ car }: Props) => {
             <div className="relative w-[315px] h-[280px] sm:w-[480px] sm:h-[350px]">
                 <Image
                     src='/assets/preview.png'
-                    alt='car image'
+                    alt={`${car.model} image`}
                     fill
                     className=' object-contain'
                 ></Image>
@@ -48,7 +48,7 @@ const CarImageDisplay = ({ car }: Props) => {
                     <div  className="relative  w-[150px] h-[100px]">
                         <Image
                             src='/assets/previewSmall.png'
-                            alt={`car preview`}
+                            alt={`${car.model} preview`}
                             fill
                             className="object-cover cursor-pointer rounded-xl"
                         />
@@ -56,7 +56,7 @@ const CarImageDisplay = ({ car }: Props) => {
                     <div  className="relative w-[150px] h-[100px]">
                         <Image
                             src='/assets/previewSmall.png'
-                            alt={`car preview`}
+                            alt={`${car.model} preview`}
                             fill
                             className="object-cover cursor-pointer rounded-xl"
                         />
@@ -64,7 +64,7 @@ const CarImageDisplay = ({ car }: Props) => {
                     <div  className="relative w-[150px] h-[100px]">
                         <Image
                             src='/assets/previewSmall.png'
-                            alt={`car preview`}
+                            alt={`${car.model} preview`}
                             fill
                             className="object-cover cursor-pointer rounded-xl"
                         />
@@ -72,7 +72,7 @@ const CarImageDisplay = ({ car }: Props) => {
                     <div  className="relative w-[150px] h-[100px]">
                         <Image
                             src='/assets/previewSmall.png'
-                            alt={`car preview`}
+                            alt={`${car.model} preview`}
                             fill
                             className="object-cover cursor-pointer rounded-xl"
                         />
@@ -80,7 +80,7 @@ const CarImageDisplay = ({ car }: Props) => {
                     <div  className="relative w-[150px] h-[100px]">
                         <Image
                             src='/assets/previewSmall.png'
-                            alt={`car preview`}
+                            alt={`${car.model} preview`}
                             fill
                             className="object-cover cursor-pointer rounded-xl"
                         />
@@ -88,7 +88,7 @@ const CarImageDisplay = ({ car }: Props) => {
                     <div  className="relative w-[150px] h-[100px]">
                         <Image
                             src='/assets/previewSmall.png'
-                            alt={`car preview`}
+                            alt={`${car.model} preview`}
                             fill
                             className="object-cover cursor-pointer rounded-xl"
                         />

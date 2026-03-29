@@ -6,7 +6,7 @@ import React from 'react'
 
 
 interface Props {
-    params: { model: string }
+    params: Promise<{ model: string }>
   }
 
   async function fetchCarsWithSameModel(model: string): Promise<Car[]> {
@@ -27,8 +27,8 @@ interface Props {
     }
     
 
-const page = async ({params}: Props) => {
-  const {model} = await params
+const page = async ({ params }: Props) => {
+  const { model } = await params
   const cars = await fetchCarsWithSameModel(model);
   const car = cars[0]
   if(!car){

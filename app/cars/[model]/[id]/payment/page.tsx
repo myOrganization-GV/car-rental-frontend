@@ -4,7 +4,7 @@ import { Car } from '@/types/CarType';
 import CarNotFound from '@/components/CarNotFound';
 
 type Props = {
-    params: {id: string}
+    params: Promise<{ id: string }>
 }
 async function fetchCarById(id:string): Promise<Car|null> {
     try {
@@ -22,8 +22,8 @@ async function fetchCarById(id:string): Promise<Car|null> {
       return null
     }
   }
-const page = async ({params}: Props) => {
-  const {id} = await params;
+const page = async ({ params }: Props) => {
+  const { id } = await params;
   const car = await fetchCarById(id);
 
   return (

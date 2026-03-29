@@ -1,9 +1,7 @@
 import SigninForm from '@/components/SigninForm'
 import React from 'react'
 
-type Props = {}
-
-const page = (props: Props) => {
+const Page = () => {
 
   return (
     <div className='bg-[#F6F7F9] py-[20px]'>
@@ -12,4 +10,4 @@ const page = (props: Props) => {
   )
 }
 
-export default page
+export default Page

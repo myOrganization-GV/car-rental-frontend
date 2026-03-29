@@ -4,6 +4,7 @@ import { RentalFormError } from '@/types/RentalFormError';
 import React from 'react';
 
 type ActionState = Awaited<ReturnType<typeof paymentFormAction>>;
+
 interface Props {
   formData: RentalFormData;
   updateFormData: UpdateRentalFormData;
@@ -12,7 +13,7 @@ interface Props {
   state?: ActionState;
 }
 
-const RentalConfirmationForm = ({ formData, updateFormData, errors, isPending, state }: Props) => {
+const RentalConfirmationForm = ({ isPending, state }: Props) => {
   const hasSubmitted = !!state?.sagaId || (!!state && !state.errors);
   const hasError = !!state?.errors;
 
@@ -38,7 +39,7 @@ const RentalConfirmationForm = ({ formData, updateFormData, errors, isPending, s
           </div>
           <h2 className='font-bold text-[20px] text-green-700'>Request Received!</h2>
           <p className='text-[14px] text-[#90A3BF] max-w-xs'>
-            Your rental request has been sent. Our system is processing it — you'll receive a confirmation shortly.
+            Your rental request has been sent. Our system is processing it and you&apos;ll receive a confirmation shortly.
           </p>
           {state?.sagaId && (
             <p className='text-[12px] text-[#90A3BF] font-mono bg-[#F6F7F9] px-3 py-1 rounded-md'>
@@ -61,7 +62,7 @@ const RentalConfirmationForm = ({ formData, updateFormData, errors, isPending, s
       </div>
       <div className='flex bg-[#F6F7F9] rounded-md justify-center py-2 px-4 items-center'>
         <div>
-          We're really close, remember to review your rental and you are ready to confirm your payment!
+          We&apos;re really close, remember to review your rental and you are ready to confirm your payment!
         </div>
       </div>
       {hasError && (

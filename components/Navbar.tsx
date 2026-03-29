@@ -3,9 +3,7 @@ import Link from 'next/link'
 import React from 'react'
 import { SignOutButton } from './SignOutButton'
 
-type Props = {}
-
-const Navbar = async (props: Props) => {
+const Navbar = async () => {
     const session = await auth()
     const user = session?.user;
 

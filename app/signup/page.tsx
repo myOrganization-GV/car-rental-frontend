@@ -1,15 +1,11 @@
 "use client"
-import GithubSvg from '@/components/GithubSvg';
-import GoogleSvg from '@/components/GoogleSvg';
 import SignupForm from '@/components/SignupForm'
 import SocialLogins from '@/components/SocialLogins';
 import { signinFormAction } from '@/lib/actions/signinFormAction';
 import React, { useActionState } from 'react'
 
-type Props = {}
-
-const page = (props: Props) => {
-  const [state, action, isPending] = useActionState(signinFormAction, undefined);
+const Page = () => {
+  const [, action] = useActionState(signinFormAction, undefined);
   return (
     <div className='bg-[#F6F7F9] py-[20px]'>
       <SignupForm />
@@ -22,4 +18,4 @@ const page = (props: Props) => {
   )
 }
 
-export default page
+export default Page

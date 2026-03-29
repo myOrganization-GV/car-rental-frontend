@@ -15,25 +15,20 @@ import { RentalFormError } from '@/types/RentalFormError';
 import { createCardToken } from '@mercadopago/sdk-react';
 import { useRouter } from 'next/navigation';
 
-import React, { useActionState, useEffect, useRef, useState } from 'react'
+import React, { useActionState, useEffect, useState } from 'react'
 
 interface Props {
   car: Car
 }
 
+type ActionState = Awaited<ReturnType<typeof paymentFormAction>>;
 
-const initialState: {
-  message: string | null;
-  errors: Record<string, string[]> | null;
-} = {
-  message: null,
-  errors: null,
-};
+
 
 const totalSteps = 4;
 
 const ClientContent = ({ car }: Props) => {
-  const [state, action, isPending] = useActionState(paymentFormAction, undefined);
+  const [state, action, isPending] = useActionState<ActionState | undefined, FormData>(paymentFormAction, undefined);
   const [formErrors, setFormErrors] = useState<RentalFormError[]>([]);
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoadingPixDetails, setIsLoadingPixDetails] = useState(false);
@@ -109,7 +104,7 @@ const ClientContent = ({ car }: Props) => {
   }, [state]);
 
 
-  const updateFormData = (data: any) => {
+  const updateFormData = (data: Partial<RentalFormData>) => {
     setFormData(prevData => ({ ...prevData, ...data }));
   };
 
@@ -135,10 +130,10 @@ const ClientContent = ({ car }: Props) => {
       try {
         token = await createCardToken({ cardholderName: formData.name })
         updateFormData({ cardToken: token?.id })
-      } catch (error: any) {
+      } catch (error: unknown) {
         if (!Array.isArray(error)) return
         const newErrors: RentalFormError[] = [];
-        (error as Array<RentalFormError>).forEach(err => {
+        error.filter(isRentalFormError).forEach(err => {
           newErrors.push({ field: err.field, message: err.message })
         })
         setFormErrors(newErrors);
@@ -250,7 +245,7 @@ const ClientContent = ({ car }: Props) => {
               <div>
                 <h2 className='font-bold text-[18px]'>Preparing your PIX payment</h2>
                 <p className='text-[13px] text-[#90A3BF] mt-1 max-w-xs'>
-                  Your rental request was received! We're generating your QR code, this should only take a few seconds...
+                  Your rental request was received! We&apos;re generating your QR code, this should only take a few seconds...
                 </p>
               </div>
               <div className='flex flex-col gap-2 w-full max-w-xs'>
@@ -396,16 +391,17 @@ const validatePixPaymentForm = (formData: RentalFormData, setFormErrors: React.D
   setFormErrors(newErrors);
   return newErrors.length === 0;
 }
-const validateConfirmationForm = (formData: RentalFormData, setFormErrors: React.Dispatch<React.SetStateAction<RentalFormError[]>>) => {
-  const newErrors: RentalFormError[] = [];
-  if (!formData.terms) {
-    newErrors.push({ field: 'terms', message: 'Please accept our terms' });
-  }
-
-
-  setFormErrors(newErrors);
-  return newErrors.length === 0;
+const isRentalFormError = (value: unknown): value is RentalFormError => {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'field' in value &&
+    'message' in value &&
+    typeof value.field === 'string' &&
+    typeof value.message === 'string'
+  );
 }
+
 const isValidEmail = (email: string): boolean => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);

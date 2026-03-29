@@ -1,10 +1,11 @@
 "use client"
+import { RentalFormData, UpdateRentalFormData } from '@/types/RentalFormData';
 import { RentalFormError } from '@/types/RentalFormError';
 import React from 'react'
 
 interface Props {
-    formData: any;
-    updateFormData: (data: any) => void;
+    formData: RentalFormData;
+    updateFormData: UpdateRentalFormData;
     errors: RentalFormError[]
 }
 

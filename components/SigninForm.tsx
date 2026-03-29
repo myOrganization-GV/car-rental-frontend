@@ -1,15 +1,10 @@
 "use client"
 
-import React, { useActionState, useEffect } from 'react'
-import GoogleSvg from './GoogleSvg'
-import GithubSvg from './GithubSvg'
+import React, { useActionState } from 'react'
 import { signinFormAction } from '@/lib/actions/signinFormAction'
 import SocialLogins from './SocialLogins'
 
-
-type Props = {}
-
-const SigninForm = (props: Props) => {
+const SigninForm = () => {
     const [state, action, isPending] = useActionState(signinFormAction, undefined);
     return (
         <form action={action} className='w-1/3 mx-auto bg-white h-full p-4 rounded-lg'>

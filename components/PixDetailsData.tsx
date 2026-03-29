@@ -12,6 +12,10 @@ interface GetPixDetailsResult {
     status: number | null;
 }
 
+const getErrorMessage = (error: unknown): string => {
+    return error instanceof Error ? error.message : 'Unknown error';
+}
+
 export async function getPixDetails(sagaId: string): Promise<GetPixDetailsResult> { 
     const backendUrl = process.env.BACKEND_URL;
 
@@ -45,8 +49,8 @@ export async function getPixDetails(sagaId: string): Promise<GetPixDetailsResult
         console.log(`[Server Action] Successfully fetched PIX details for sagaId ${sagaId}.`);
         return { data: pixDetails, error: null, status: response.status };
 
-    } catch (err: any) {
+    } catch (err: unknown) {
         console.error(`[Server Action] Network/fetch error during PIX details fetch for sagaId ${sagaId}:`, err);
-        return { data: null, error: `Network error: ${err.message || 'Unknown error'}`, status: 500 };
+        return { data: null, error: `Network error: ${getErrorMessage(err)}`, status: 500 };
     }
 }

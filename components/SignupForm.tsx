@@ -1,8 +1,6 @@
 "use client"
 import { signupFormAction } from '@/lib/actions/signupFormAction';
 import React, { useActionState } from 'react'
-import GoogleSvg from './GoogleSvg';
-import GithubSvg from './GithubSvg';
 
 
 

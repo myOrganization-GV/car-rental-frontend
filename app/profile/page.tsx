@@ -1,29 +1,28 @@
-import { auth } from "@/auth";
+import Link from "next/link";
 
-async function delay() {
-  await new Promise(resolve => setTimeout(resolve, 3000));
-}
-const MyProfile = async () => {
-  const session = await auth();
-  await delay();
-
-  const backendResponse = await fetch("http://localhost:8080/user/", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${session?.user?.accessToken}`
-    }
-  });
-
-  const responseText = await backendResponse.text();
-
-  const user = session?.user;
-
+const MyProfile = () => {
   return (
-    <div className="text-black">
-      <h1>Welcome, {user?.firstName}</h1>
-      <p>{responseText}</p>
-    </div>
+    <main className=" bg-[#F6F7F9] px-[10px] py-10 sm:px-[60px]">
+      <section className="mx-auto max-w-4xl rounded-2xl bg-white p-8 text-black shadow-sm sm:p-10">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#90A3BF]">
+          Profile
+        </p>
+        <h1 className="text-3xl font-bold">Work in progress</h1>
+        <p className="mt-3 max-w-xl text-sm leading-6 text-[#596780] sm:text-base">
+          This page is still under construction. Profile details and rental
+          history will be available here soon.
+        </p>
+
+        <div className="mt-8 flex flex-wrap gap-3">
+          <Link href="/explore" className="btn bg-blue-600 text-white border-none hover:bg-blue-700">
+            Explore Cars
+          </Link>
+          <Link href="/" className="btn btn-ghost text-[#596780]">
+            Back Home
+          </Link>
+        </div>
+      </section>
+    </main>
   );
 };
 

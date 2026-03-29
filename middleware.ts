@@ -1,4 +1,3 @@
-import NextAuth from "next-auth";
 import { auth } from "./auth";
 import { privateRoutes } from "./routes";
 
@@ -7,7 +6,8 @@ export default auth(async (req)=> {
     const {nextUrl} = req;
     const baseUrl = process.env.BASE_URL as string
 
-    const isPrivateRoute = privateRoutes.includes(nextUrl.pathname);
+    const isPrivateRoute = privateRoutes.some(route => nextUrl.pathname.startsWith(route));
+    console.log(nextUrl.pathname)
     const isAuthPage = ["/signin", "/signup"].some(el => nextUrl.pathname.includes(el))
     console.log(isAuthPage)
 

@@ -46,7 +46,7 @@ const ClientContent = ({ car }: Props) => {
 
   const router = useRouter();
   const [redirectCount, setRedirectCount] = useState(5);
-  const hasSubmitted = !!state?.sagaId || (state && !state?.errors && currentStep === totalSteps);
+  const hasSubmitted = !!state && !state?.errors && state?.paymentMethod !== 'Pix';
 
 
   useEffect(() => {
@@ -165,7 +165,7 @@ const ClientContent = ({ car }: Props) => {
 
   return (
     <div className='sm:p-[60px] p-[10px] w-full mx-auto place-items-center gap-8 text-black grid grid-cols-1 lg:grid-cols-2 bg-[#F6F7F9] '>
-      {!pixPaymentDetails && <form action={action} className='w-full h-full'>
+      {!(state?.sagaId && state?.paymentMethod === 'Pix') && !pixPaymentDetails && <form action={action} className='w-full h-full'>
         {Object.entries(formData).map(([key, value]) => (
           value !== undefined && value !== null && (
             <input
@@ -240,10 +240,54 @@ const ClientContent = ({ car }: Props) => {
           )}
         </div>
       </form>}
-      {pixPaymentDetails && <div className='  w-full h-full p-4 bg-white rounded-xl'>
-        <PixQRCodeImage base64={pixPaymentDetails.qrCodeBase64} />
-        <PixLinkDisplay qrCode={pixPaymentDetails.qrCode} />
-      </div>}
+      {state?.sagaId && state?.paymentMethod === 'Pix' && !pixPaymentDetails && (
+        <div className='w-full h-full p-6 bg-white rounded-xl flex flex-col items-center justify-center gap-4 text-center'>
+          {!pixError && (
+            <>
+              <div className='w-14 h-14 rounded-full bg-blue-50 flex items-center justify-center'>
+                <div className='w-7 h-7 border-4 border-blue-600 border-t-transparent rounded-full animate-spin' />
+              </div>
+              <div>
+                <h2 className='font-bold text-[18px]'>Preparing your PIX payment</h2>
+                <p className='text-[13px] text-[#90A3BF] mt-1 max-w-xs'>
+                  Your rental request was received! We're generating your QR code, this should only take a few seconds...
+                </p>
+              </div>
+              <div className='flex flex-col gap-2 w-full max-w-xs'>
+                {['Rental request confirmed', 'Initiating PIX transaction', 'Generating QR code...'].map((step, i) => (
+                  <div key={i} className='flex items-center gap-2 text-[13px] text-[#90A3BF] bg-[#F6F7F9] px-4 py-2 rounded-md'>
+                    {i < 2
+                      ? <div className='w-3 h-3 rounded-full bg-green-500 shrink-0' />
+                      : <div className='w-3 h-3 border-2 border-blue-400 border-t-transparent rounded-full animate-spin shrink-0' />}
+                    {step}
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+          {pixError && (
+            <div className='flex flex-col items-center gap-3'>
+              <div className='w-12 h-12 rounded-full bg-red-100 flex items-center justify-center'>
+                <svg className='w-6 h-6 text-red-500' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2.5} d='M6 18L18 6M6 6l12 12' />
+                </svg>
+              </div>
+              <h2 className='font-bold text-[18px]'>Something went wrong</h2>
+              <p className='text-[13px] text-[#90A3BF] max-w-xs'>{pixError}</p>
+              <p className='text-[12px] text-[#90A3BF]'>Your rental was confirmed — contact support with your request ID.</p>
+              <p className='text-[12px] font-mono bg-[#F6F7F9] px-3 py-1 rounded-md text-[#90A3BF]'>
+                Request ID: {state.sagaId}
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+      {pixPaymentDetails && (
+        <div className='w-full h-full p-4 bg-white rounded-xl'>
+          <PixQRCodeImage base64={pixPaymentDetails.qrCodeBase64} />
+          <PixLinkDisplay qrCode={pixPaymentDetails.qrCode} />
+        </div>
+      )}
       <div className='w-full h-full rounded-xl bg-white'>
         <RentalSummary car={car} formData={formData} />
       </div>

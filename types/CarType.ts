@@ -6,6 +6,7 @@ export type Car = {
   category: string;
   manufacturer: string;
   color: string;
+  availabilityStatus: string;
   transmissionType: string;
   numberOfSeats: number;
   description: string;

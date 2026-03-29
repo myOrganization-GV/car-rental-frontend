@@ -32,7 +32,6 @@ const Navbar = async (props: Props) => {
                                     Profile
                                 </Link>
                             </li>
-                            <li className='hover:bg-primary'><Link href=''>Settings</Link></li>
                             <li className='hover:bg-primary'>
                                 <SignOutButton />
                             </li>

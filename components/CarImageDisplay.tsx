@@ -22,12 +22,6 @@ const CarImageDisplay = ({ car }: Props) => {
         setX(prev => prev + scrollAmount);
     };
 
-    const thumbs = [
-        'red', 'green', 'blue',
-        'orange', 'purple', 'teal'
-    ];
-
-
     return (
         <div className='gap-2 sm:gap-5 flex flex-col justify-center items-center  w-[480px]'>
             <div className="relative w-[315px] h-[280px] sm:w-[480px] sm:h-[350px]">

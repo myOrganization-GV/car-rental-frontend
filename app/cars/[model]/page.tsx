@@ -19,7 +19,6 @@ interface Props {
           throw new Error(`Failed to fetch cars: ${response.statusText}`);
         }
         const carsData: Car[] = await response.json();
-        console.log("Fetched cars data:", carsData);
         return carsData;
       } catch (error) {
         console.error("Failed to fetch cars:", error);

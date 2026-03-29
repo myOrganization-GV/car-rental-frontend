@@ -22,7 +22,7 @@ export async function paymentFormAction(_prevState: unknown, formData: FormData)
     req: { headers: requestHeaders },
     secret: process.env.AUTH_SECRET,
   })) as AuthToken | null;
-  console.log(token)
+  console.log("here is the token: ", token)
   if (rawFormData.paymentMethod === "Credit Card") {
     console.log("Processing Credit Card payment in Server Action...");
     try {

@@ -3,9 +3,7 @@ import ClientContent from "./ClientContent";
 
 async function fetchCars(): Promise<Car[]> {
     try {
-      const response = await fetch(`${process.env.BACKEND_URL}/inventory/cars`, {
-         cache: 'no-store' 
-      });
+      const response = await fetch(`${process.env.BACKEND_URL}/inventory/cars`);
       if (!response.ok) {
         console.error(`Error fetching cars: ${response.status} ${response.statusText}`);
         throw new Error(`Failed to fetch cars: ${response.statusText}`);

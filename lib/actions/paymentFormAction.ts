@@ -20,7 +20,7 @@ export async function paymentFormAction(_prevState: unknown, formData: FormData)
 
   const token = (await getToken({
     req: { headers: requestHeaders },
-    secret: process.env.AUTH_SECRET,
+    secret: process.env.AUTH_SECRET, secureCookie: true, cookieName:"__Secure-authjs.session-token"
   })) as AuthToken | null;
   console.log("here is the token: ", token)
   if (rawFormData.paymentMethod === "Credit Card") {

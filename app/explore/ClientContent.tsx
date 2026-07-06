@@ -34,10 +34,15 @@ interface ClientContentProps {
 
 const ClientContent: React.FC<ClientContentProps> = ({ initialCars }) => {
     const cars = initialCars;
+
+    const prices = initialCars.map(car => Number(car.pricePerDay));
+    const dataMinPrice = prices.length ? Math.floor(Math.min(...prices)) : 0;
+    const dataMaxPrice = prices.length ? Math.ceil(Math.max(...prices)) : 250;
+
     const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
     const [selectedCaps, setSelectedCaps] = useState<string[]>([]);
-    const [minPrice, setMinPrice] = useState(80);
-    const [maxPrice, setMaxPrice] = useState(150);
+    const [minPrice, setMinPrice] = useState(dataMinPrice);
+    const [maxPrice, setMaxPrice] = useState(dataMaxPrice);
 
 
     const typeOptions: FilterOption[] = rawTypeOptions.map(opt => ({
@@ -132,8 +137,8 @@ const ClientContent: React.FC<ClientContentProps> = ({ initialCars }) => {
                         thumbRightColor="#3b82f6"
                         ruler={false}
                         label={false}
-                        min={80}
-                        max={250}
+                        min={dataMinPrice}
+                        max={dataMaxPrice}
                         step={5}
                         style={{
                             border: 'none',

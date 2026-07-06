@@ -22,9 +22,7 @@ export async function paymentFormAction(_prevState: unknown, formData: FormData)
     req: { headers: requestHeaders },
     secret: process.env.AUTH_SECRET, secureCookie: true, cookieName:"__Secure-authjs.session-token"
   })) as AuthToken | null;
-  console.log("here is the token: ", token)
   if (rawFormData.paymentMethod === "Credit Card") {
-    console.log("Processing Credit Card payment in Server Action...");
     try {
       const backendUrl = process.env.BACKEND_URL;
       if (!backendUrl) {
@@ -38,7 +36,6 @@ export async function paymentFormAction(_prevState: unknown, formData: FormData)
           successForPix: false,
         };
       }
-      console.log(`Calling backend API at ${backendUrl}/rent/car with token.`);
       if (!rawFormData.cardToken) {
         console.error("CardToken not available, something went wrong.");
         return {
@@ -93,12 +90,7 @@ export async function paymentFormAction(_prevState: unknown, formData: FormData)
           successForPix: false,
         };
       }
-      const cardPaymentResult = await cardPaymentResponse.json();
-
-      console.log(
-        "Card payment processed successfully by backend:",
-        cardPaymentResult
-      );
+      await cardPaymentResponse.json();
 
       return {
         message: "Card payment processed successfully.",
@@ -123,7 +115,6 @@ export async function paymentFormAction(_prevState: unknown, formData: FormData)
   }
 
   if (rawFormData.paymentMethod === "Pix") {
-    console.log("Processing PIX payment in Server Action...");
     try {
       const pixRequestBody = {
         rentalStartDate: `${rawFormData.rentalPickupDate + "T00:00:00"}`,

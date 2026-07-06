@@ -25,9 +25,7 @@ export async function getPixDetails(sagaId: string): Promise<GetPixDetailsResult
     }
 
     try {
-        console.log(`[Server Action] Fetching PIX details for sagaId: ${sagaId}`);
-
-        const response = await fetch(`${backendUrl}/payments/${sagaId}`, { 
+        const response = await fetch(`${backendUrl}/payments/${sagaId}`, {
             cache: 'no-store', 
         });
 
@@ -46,7 +44,6 @@ export async function getPixDetails(sagaId: string): Promise<GetPixDetailsResult
         }
 
         const pixDetails: PixDetailsResponse = responseBody;
-        console.log(`[Server Action] Successfully fetched PIX details for sagaId ${sagaId}.`);
         return { data: pixDetails, error: null, status: response.status };
 
     } catch (err: unknown) {

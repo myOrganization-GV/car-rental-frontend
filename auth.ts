@@ -13,11 +13,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          console.log("Missing credentials");
           return null;
         }
 
-        console.log("Attempting login with:", credentials.email);
         const backendUrl = process.env.BACKEND_URL;
         const response = await fetch(`${backendUrl}/auth/login`, {
           method: "POST",
@@ -31,14 +29,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           }),
         });
 
-        console.log("Response status:", response.status);
         if (!response.ok) {
-          console.log("Backend auth failed with status:", response.status);
           return null;
         }
 
         const data = await response.json();
-        console.log("Auth successful, user data received: ", data);
 
         return {
           id: data.user.userId.toString(),
@@ -66,8 +61,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           token.name = user.firstName;
         }
         if(account.provider === "github"){
-          console.log(token);
-          console.log(account);
           token.idToken = account.access_token;
         }
         if (user) {

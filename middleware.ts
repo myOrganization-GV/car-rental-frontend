@@ -11,9 +11,7 @@ export default auth(async (req)=> {
     }
 
     const isPrivateRoute = privateRoutes.some(route => nextUrl.pathname.startsWith(route));
-    console.log(nextUrl.pathname)
     const isAuthPage = ["/signin", "/signup"].some(el => nextUrl.pathname.includes(el))
-    console.log(isAuthPage)
 
     if(isLoggedIn && isAuthPage){
         return Response.redirect(baseUrl)

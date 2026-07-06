@@ -19,7 +19,6 @@ export const signinFormAction = async (
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const provider = formData.get("provider") as string;
-  console.log(provider)
   if (provider === "google") {
     try {
       await signIn("google");

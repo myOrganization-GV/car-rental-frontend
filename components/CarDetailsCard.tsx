@@ -8,16 +8,16 @@ type Props = {
 }
 
 const CarDetailsCard = ({ cars }: Props) => {
-    const colors = cars.map(car => car.color);
     const car = cars[0];
-
-    const firstAvailable = cars.find(c => c.availabilityStatus === "AVAILABLE");
+    const availableCars = cars.filter(carItem => carItem.availabilityStatus === "AVAILABLE");
+    const availableColors = availableCars.map(carItem => carItem.color);
+    const firstAvailable = availableCars[0];
     const [selectedColor, setSelectedColor] = useState<string | null>(firstAvailable?.color ?? null);
     const [selectedCar, setSelectedCar] = useState<Car | null>(firstAvailable ?? null);
 
     const handleClick = (color: string) => {
         setSelectedColor(color);
-        const foundCar = cars.find(car => car.color === color);
+        const foundCar = availableCars.find(carItem => carItem.color === color);
         if (foundCar) {
             setSelectedCar(foundCar);
         }
@@ -43,41 +43,44 @@ const CarDetailsCard = ({ cars }: Props) => {
                     Manufacturer <span className='text-[#596780]'>{car.manufacturer}</span>
                 </div>
             </div>
-            <div className='flex-wrap flex gap-x-2 w-full h-14'>
+            <div className='flex-wrap flex gap-x-2 w-full min-h-14'>
                 <div className='w-full text-[#596780]'>Select a color: </div>
-                {colors.map(color => {
-                    const isActive = color === selectedColor;
-                    const carForColor = cars.find(c => c.color === color);
-                    const isAvailable = carForColor?.availabilityStatus === "AVAILABLE";
+                {availableCars.length > 0 ? (
+                    availableColors.map(color => {
+                        const isActive = color === selectedColor;
 
-                    return (
-                        <button
-                            key={color}
-                            onClick={() => handleClick(color)}
-                            disabled={!isAvailable}
-                            aria-label={`Select ${color}`}
-                            title={!isAvailable ? `${color} — ${carForColor?.availabilityStatus}` : color}
-                            className={`
-                                w-6 h-6 rounded-full border cursor-pointer 
-                                ${isActive ? 'border-2 border-blue-300' : 'border-black'}
-                                ${!isAvailable ? 'opacity-40 cursor-not-allowed grayscale' : ''}
-                            `}
-                            style={{ backgroundColor: color }}
-                        />
-                    )
-                })}
+                        return (
+                            <button
+                                key={color}
+                                onClick={() => handleClick(color)}
+                                aria-label={`Select ${color}`}
+                                title={color}
+                                className={`
+                                    w-6 h-6 rounded-full border cursor-pointer
+                                    ${isActive ? 'border-2 border-blue-300' : 'border-black'}
+                                `}
+                                style={{ backgroundColor: color }}
+                            />
+                        )
+                    })
+                ) : (
+                    <p className='text-sm text-[#90A3BF]'>No car of this model is currently available at the moment.</p>
+                )}
             </div>
             <div className='flex w-full justify-between items-center'>
                 <span className='font-semibold text-xl text-black'>
                     ${car.pricePerDay.toFixed(2)}/<span className='font-normal text-xl text-[#90A3BF]'>day</span>
                 </span>
-                <Link
-                    href={{ pathname: `/cars/${car.model}/${selectedCar?.carId}/payment` }}
-                    className={`btn btn-primary ${!selectedCar ? 'pointer-events-none opacity-50' : ''}`}
-                    aria-disabled={!selectedCar}
-                >
-                    Rent Now
-                </Link>
+                {selectedCar ? (
+                    <Link
+                        href={{ pathname: `/cars/${car.model}/${selectedCar.carId}/payment` }}
+                        className='btn btn-primary'
+                    >
+                        Rent Now
+                    </Link>
+                ) : (
+                    <span className='btn btn-disabled opacity-50 cursor-not-allowed'>Unavailable</span>
+                )}
             </div>
         </div>
     )

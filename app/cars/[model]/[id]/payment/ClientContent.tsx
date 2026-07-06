@@ -69,7 +69,6 @@ const ClientContent = ({ car }: Props) => {
       setIsLoadingPixDetails(true)
       while (attempts < maxAttempts && !isCancelled) {
         try {
-          console.log(`Attempt at fetching pix details: ${attempts + 1}`)
           setIsLoadingPixDetails(true);
           const result = await getPixDetails(state.sagaId);
 

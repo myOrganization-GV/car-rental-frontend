@@ -51,7 +51,6 @@ export async function paymentFormAction(_prevState: unknown, formData: FormData)
         rentalStartDate: `${rawFormData.rentalPickupDate + "T00:00:00"}`,
         rentalEndDate: `${rawFormData.rentalDropoffDate + "T20:00:00"}`,
         carId: rawFormData.carId,
-        userId: rawFormData.carId,
         paymentDto: {
           cardToken: rawFormData.cardToken,
           paymentMethod: "CREDIT_CARD",
@@ -120,7 +119,6 @@ export async function paymentFormAction(_prevState: unknown, formData: FormData)
         rentalStartDate: `${rawFormData.rentalPickupDate + "T00:00:00"}`,
         rentalEndDate: `${rawFormData.rentalDropoffDate + "T20:00:00"}`,
         carId: rawFormData.carId,
-        userId: rawFormData.carId,
         paymentDto: {
           paymentMethod: "PIX",
           payerEmail: session?.user?.email?.trim(),
